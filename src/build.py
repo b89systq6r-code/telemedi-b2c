@@ -106,3 +106,14 @@ SELECT date, utm_source, utm_medium, utm_campaign, channel(utm_source,utm_medium
 for t in ['qa_users','sessions','orders','go','session_funnel','patients','spend']:
     print(t, con.execute(f"select count(*) from {t}").fetchone()[0])
 print(con.sql("select acq_channel, count(*) n, round(avg((acq_channel=first_order_session_channel)::int),2) same_as_lasttouch from patients group by 1 order by 2 desc"))
+
+# LTV/retencja per pacjent (okna od 1. zamówienia)
+X("""CREATE OR REPLACE TABLE patient_ltv AS
+SELECT p.user_id,
+ count(o.order_id) FILTER (WHERE o.order_seq>1 AND o.created_at <= p.first_at + INTERVAL 30 DAY) r30,
+ count(o.order_id) FILTER (WHERE o.order_seq>1 AND o.created_at <= p.first_at + INTERVAL 90 DAY) r90,
+ count(o.order_id) FILTER (WHERE o.order_seq>1 AND o.created_at <= p.first_at + INTERVAL 180 DAY) r180,
+ sum(o.net_rev - o.doc_cost) FILTER (WHERE o.created_at <= p.first_at + INTERVAL 90 DAY) cm90,
+ sum(o.net_rev - o.doc_cost) FILTER (WHERE o.created_at <= p.first_at + INTERVAL 180 DAY) cm180,
+ sum(o.net_rev - o.doc_cost) cm_all
+FROM patients p JOIN orders o USING(user_id) GROUP BY 1""")

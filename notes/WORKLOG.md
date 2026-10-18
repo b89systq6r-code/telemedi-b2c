@@ -28,7 +28,7 @@ Spójność, która się zgadza:
 | 2025-10 | Pierwsze GO z X 2024 wygasają, brak auto-odnowienia | valid_until |
 | 2025-11-03 | Start Meta `meta_prosp_l4_szybko` + kod `L4SZYBKO20` (−20 zł) | Spend i pierwsza sesja kampanii, pierwszy kod 2025-11-04 |
 | 2026-02-09 | Start TikTok `tt_prosp_l4_15min` + kod `TIKTOK25` (−25 zł) | j.w. |
-| od XII 2025 | Rośnie opóźnienie startu wizyty (z ok. 4 do ok. 9 min), rośnie no_show (z 2,5% do 6%), spadają oceny (z 4,4 do 4,15) | Miesięczne KPI zamówień |
+| od XII 2025 | Rośnie opóźnienie startu wizyty (z ok. 4 do ok. 9 min), rośnie odsetek **refunded** (z 2% do 6%; najpierw błędnie zapisałem to jako no_show, a no_show jest płaskie, ok. 2,5%), spadają oceny (z 4,4 do 4,15) | Miesięczne KPI zamówień |
 | 2026-06-10…24 | Duplikaty w eksporcie orders | patrz wyżej |
 
 Hipoteza robocza: wzrost XI 2025 – III 2026 jest kupiony płatnym ruchem L4 (Meta i TikTok z kodami rabatowymi). Ten ruch konwertuje gorzej (psu/sess spada z 0,18 do 0,12), przeciąża internistów (opóźnienia, no_show) i może mieć słabą retencję. Do sprawdzenia na kohortach.
@@ -72,3 +72,19 @@ Uwaga metodologiczna: okres P1 startuje od zera (sprzedaż od 1 X 2024), więc P
 ## Krok 8: dodatkowe kontrole jakości
 - Brak: zamówień z terminem przed płatnością, startu dla cancelled/no_show, ocen dla nieodbytych wizyt, nadpłat, częściowych zwrotów, botów (max 29 sesji/visitor), visitor_id współdzielonych przez wiele kont.
 - Pediatra: średni wiek konta 38 lat, więc rodzic kupuje dla dziecka na swoim koncie. Wiek z users.csv nie opisuje pacjenta wizyty.
+
+## Krok 9: liczby do priorytetów
+- iOS Safari: przed 17 III krok konta 0,746, po 0,599. W B ok. 975 sesji/mies. dochodzi do wyboru terminu, więc ok. 143 mniej logowań/mies. × 0,80 (konto → opłacone) ≈ 115 opłaconych zamówień/mies. Marża/zamówienie na iOS Safari 38,4 zł, 50% to nowi pacjenci, więc ≈ 5–6 tys. zł/mies.
+- Kampanie L4 (VII–IX 2026): Meta 17,0 tys. zł/mies. i 398 nowych/mies. (CAC 42,7 zł), TikTok 12,3 tys. zł/mies. i 267 nowych/mies. (CAC 46,1 zł). Marża w czasie życia kohort XI 2025 – III 2026: Meta 37,0 zł, TikTok 31,7 zł (Google generic 64,6 zł, SEO 64,9 zł).
+- Poranne sloty: ok. 380 wizyt/mies. z opóźnieniem ≥20 min, w tym ok. 140 pierwszych wizyt pacjentów core.
+- GO: ok. 200 wygaśnięć/mies. w najbliższych 12 miesiącach.
+- In-app: krok konta 0,61 vs 0,72.
+- Uwaga: wartości dla GO standalone przy porównaniu kupujących i niekupujących wyszły niespójnie (marża na zamówienie u ciężkich użytkowników bez GO tylko ok. 25 zł, bo wielu z nich już miało GO z wcześniejszych zakupów). Porównanie jest zanieczyszczone, więc nie wyciągam z niego wniosku. Trafia do „nierozstrzygalnych”.
+
+## Krok 10: narzędzie (`src/export.py`, `tool/`, `src/build_tool.py`)
+- Decyzja architektoniczna: zamiast prekalkulowanych tabel wysyłam do przeglądarki dane na poziomie pacjenta (40 918) i sesji (457 464) jako kolumnowe tablice binarne (gzip + base64, 1,3 MB). Każdy filtr i podział liczy się na żywo. To „narzędzie, nie raport”, więc da się zadać pytanie, którego nie przewidziałem.
+- Kohorty: dzień / tydzień / miesiąc, miary: retencja w N dni, marża w N dni, marża − CAC, nowi pacjenci, % zwrotów. Podział po 15 wymiarach, filtry po 13. Cenzura okna zaznaczona na wykresie. Trójkąt kohort i tabela segmentów.
+- Lejki: okres A vs B, konwersja każdego kroku w segmentach z podświetleniem spadków, szereg czasowy kroku z adnotacjami zdarzeń.
+- Kanały: CAC, marża 90/180/365 dni, marża − CAC.
+- Pierwszy render: (1) tabela ocen posortowała się alfabetycznie („10–20” przed „< 10”), poprawione na kolejność logiczną. (2) Tygodniowe szeregi lejka dla małych segmentów (macOS, iOS inne) za bardzo szumiały, podniosłem próg do 40 sesji na tydzień. (3) W werdykcie było +26%, a tabela pokazuje +27% (26,5% zaokrąglone), ujednolicone. (4) Na telefonie skrócony nagłówek.
+- Nowa obserwacja z wykresu kanałów: brand + direct też rosną w I–III 2026, razem z kampaniami L4. Może to być halo kampanii albo sezon infekcji. Dopisane do „nierozstrzygalnych”.

@@ -1,0 +1,331 @@
+<header class="top"><div class="wrap">
+  <div class="brand"><b>Telemedi B2C · kohorty i lejki</b><span>X 2024 – IX 2026 · 40 918 pacjentów · 457 464 sesji</span></div>
+  <nav class="tabs" aria-label="Sekcje">
+    <button data-t="werdykt">Czy to wzrost?</button>
+    <button data-t="kohorty">Kohorty</button>
+    <button data-t="lejki">Lejki</button>
+    <button data-t="kanaly">Kanały i CAC</button>
+    <button data-t="priorytety">Priorytety</button>
+    <button data-t="niewiadome">Czego nie rozstrzygniemy</button>
+    <button data-t="dane">Dane i metoda</button>
+  </nav>
+</div></header>
+
+<main class="wrap">
+<p id="loading" class="loading">Wczytuję dane (ok. 1,3 MB)…</p>
+
+<!-- ============ WERDYKT ============ -->
+<section class="tab" id="tab-werdykt" hidden>
+  <div class="verdict">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <span class="stamp">Wzrost tylko częściowo</span>
+      <h1>Pacjentów jest więcej, ale zdrowy wzrost to ok. +15%, nie +52%. Retencja spada.</h1>
+      <p class="lede">Dashboard odtwarzam co do sztuki. Pod średnią z 12 miesięcy kryją się trzy różne historie: kupiony ruch, który nie wraca, przeciążony poranny szczyt lekarzy i błąd logowania na iPhone'ach. Do tego dwie z czterech liczb na dashboardzie są zawyżone przez dane.</p>
+    </div>
+    <ol>
+      <li><b>Przyrost pacjentów to głównie kampanie L4.</b> Meta „L4 szybko” (od 3 XI 2025) i TikTok „L4 w 15 min” (od 9 II 2026) dały ok. 6 000 z 8 450 nowych pacjentów ponad poprzedni rok. Bez nich nowych pacjentów jest o ok. 15% więcej.</li>
+      <li><b>Ci pacjenci nie wracają.</b> Retencja 90 dni to 3–5% wobec ok. 23% w pozostałych kanałach. 72–77% kupiło z kodem rabatowym. W 16% pierwsza wizyta kończy się zwrotem, bo lekarz nie wystawił L4. Marża z pacjenta w czasie życia (ok. 32–37 zł) nie pokrywa CAC (w ostatnich 3 mies. 43–46 zł).</li>
+      <li><b>Wypierają pacjentów, którzy wracają.</b> Zajmują co trzecią poranną wizytę u internisty. Opóźnienie startu wizyty rano wzrosło z 5 do 23 minut. Pacjent, który na pierwszą wizytę czekał 20+ minut, wraca 2,5× rzadziej (11,5% vs 28,4%) i ocenia ją na 3,1 zamiast 4,45.</li>
+      <li><b>Od 17 III 2026 na iOS Safari psuje się logowanie.</b> Krok konta spadł z 75% do 60% i trwa to do dziś. To ok. 115 opłaconych zamówień miesięcznie.</li>
+      <li><b>Dwie liczby z dashboardu są zawyżone.</b> Zamówienia: duplikaty eksportu i 2 102 zamówienia testowe QA. Przychód: kwota brutto, przed zwrotami.</li>
+      <li><b>Marża po lekarzu, GO i mediach rośnie o +27%</b>, a wydatki na kampanie o +77%. Biznes rośnie, ale coraz drożej.</li>
+    </ol>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><h2>Dashboard a dane po czyszczeniu</h2><span class="note">X 2025 – IX 2026 vs X 2024 – IX 2025</span></div>
+    <div class="scroll"><table class="t" id="v-bridge"></table></div>
+    <p class="note">Okres porównawczy startuje od zera (sprzedaż od 1 X 2024), więc część wzrostu zamówień to naturalne narastanie bazy powracających pacjentów.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-head"><h3>Retencja 90 dni wg tygodnia pozyskania</h3><a href="#kohorty" data-goto="kohorty:l4" class="small">Otwórz w kohortach →</a></div>
+      <div id="v-ret"></div><div class="legend" id="v-ret-legend"></div>
+      <p class="note">Udział pacjentów, którzy w ciągu 90 dni od pierwszego zamówienia zamówili kolejną wizytę. Szare pole: kohorty, których 90 dni jeszcze nie minęło.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h3>Opóźnienie startu wizyty u internisty</h3><a href="#kohorty" data-goto="kohorty:delay" class="small">Wpływ na retencję →</a></div>
+      <div id="v-delay"></div>
+      <div id="v-mix"></div>
+      <div class="legend"><span><i class="swatch" style="background:var(--s2)"></i>Rano 6–12</span><span><i class="swatch" style="background:var(--s1)"></i>Reszta dnia</span><span><i class="swatch" style="background:var(--s8)"></i>Udział pacjentów z kampanii L4 rano</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h3>Opóźnienie a ocena wizyty</h3>
+      <div class="scroll"><table class="t" id="v-rating"></table></div>
+      <p class="note">Wszystkie odbyte wizyty z oceną (oceniają nieliczni). Opóźnienie = start wizyty minus umówiony termin.</p>
+    </div>
+    <div class="panel">
+      <h3>Co wydarzyło się w danych i kiedy</h3>
+      <div class="scroll"><table class="t">
+        <thead><tr><th>Zdarzenie</th><th>Data</th></tr></thead>
+        <tbody>
+          <tr><td>TelemediGO do kupienia osobno, e-mail <code>crm_go_upsell</code>: 225 GO w miesiąc</td><td>7 IX 2025</td></tr>
+          <tr><td>Wygasają pierwsze GO; odnawia 5,4%</td><td>od X 2025</td></tr>
+          <tr><td>Start Meta <code>meta_prosp_l4_szybko</code> + kod L4SZYBKO20 (−20 zł)</td><td>3 XI 2025</td></tr>
+          <tr><td>Opóźnienia internisty rano przekraczają 10 min</td><td>XII 2025</td></tr>
+          <tr><td>Start TikTok <code>tt_prosp_l4_15min</code> + kod TIKTOK25 (−25 zł)</td><td>9 II 2026</td></tr>
+          <tr><td>iOS Safari: krok logowania spada z 75% do 60%</td><td>17 III 2026</td></tr>
+          <tr><td>Eksport orders: 604 zamówienia zdublowane</td><td>10–24 VI 2026</td></tr>
+        </tbody></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KOHORTY ============ -->
+<section class="tab" id="tab-kohorty" hidden>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span class="eyebrow">Kohorty dzienne, tygodniowe i miesięczne</span>
+    <h1>Kto kupił, kto wrócił i co to zmieniło</h1>
+    <p class="lede">Kohorta to dzień pierwszego opłaconego zamówienia. Wybierz miarę, okno i podział. Linie przerywane z numerami to zdarzenia znalezione w danych.</p>
+  </div>
+  <div class="presets">
+    <span class="note" style="align-self:center">Gotowe widoki:</span>
+    <button class="btn" data-p="l4">Kampanie L4 vs reszta</button>
+    <button class="btn" data-p="delay">Opóźnienie 1. wizyty → retencja</button>
+    <button class="btn" data-p="morning">Poranni pacjenci internisty</button>
+    <button class="btn" data-p="promo">Kody promo: marża − CAC</button>
+    <button class="btn" data-p="go">GO przy 1. zakupie</button>
+    <button class="btn" data-p="daily">Nowi pacjenci dziennie</button>
+  </div>
+  <div class="panel">
+    <div class="controls">
+      <div class="ctl"><label for="c-metric">Miara</label><select id="c-metric">
+        <option value="ret">Retencja: % z kolejnym zamówieniem</option><option value="cm">Marża na pacjenta</option><option value="cmcac">Marża minus CAC</option><option value="n">Nowi pacjenci</option><option value="refund">% 1. wizyt ze zwrotem</option></select></div>
+      <div class="ctl"><label for="c-N">Okno</label><select id="c-N"><option value="7">7 dni</option><option value="30">30 dni</option><option value="60">60 dni</option><option value="90">90 dni</option><option value="180">180 dni</option><option value="365">365 dni</option></select></div>
+      <div class="ctl"><span class="lbl">Rozdzielczość</span><div class="seg" id="c-gran"><button data-v="day" type="button">Dzień</button><button data-v="week" type="button">Tydzień</button><button data-v="month" type="button">Miesiąc</button></div></div>
+      <div class="ctl"><label for="c-split">Podział</label><select id="c-split"></select></div>
+      <div class="ctl" style="flex-direction:row;gap:14px;align-items:center;padding-bottom:6px">
+        <label class="small" style="text-transform:none;letter-spacing:0;font:13px var(--f-body);color:var(--ink-2);display:flex;gap:6px;align-items:center"><input type="checkbox" id="c-smooth">Średnia 7-dniowa</label>
+        <label class="small" style="text-transform:none;letter-spacing:0;font:13px var(--f-body);color:var(--ink-2);display:flex;gap:6px;align-items:center"><input type="checkbox" id="c-go">Marża z opłatą GO</label>
+      </div>
+    </div>
+    <div class="filters" id="c-filters"></div>
+  </div>
+  <div class="panel">
+    <h3 id="c-title"></h3>
+    <div id="c-chart"></div>
+    <div class="legend" id="c-legend"></div>
+    <p class="note" id="c-hidden"></p>
+    <div class="evlist" id="c-ev"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h3>Segmenty w wybranym okresie pozyskania</h3>
+      <div class="controls"><div class="ctl"><label for="c-from">Kohorty od</label><input type="date" id="c-from" min="2024-10-01" max="2026-09-30"></div><div class="ctl"><label for="c-to">do</label><input type="date" id="c-to" min="2024-10-01" max="2026-09-30"></div></div></div>
+    <div class="scroll"><table class="t" id="c-seg"></table></div>
+    <p class="note" id="c-seg-range"></p>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h3>Trójkąt kohort: % z kolejnym zamówieniem po N dniach</h3><span class="note" id="c-heat-gran"></span></div>
+    <div class="scroll"><table class="heat" id="c-heat"></table></div>
+    <p class="note">Uwzględnia aktywne filtry, bez podziału. Kreskowane pola: okno jeszcze nie minęło.</p>
+  </div>
+</section>
+
+<!-- ============ LEJKI ============ -->
+<section class="tab" id="tab-lejki" hidden>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span class="eyebrow">Od wejścia na stronę do płatności</span>
+    <h1>Gdzie i od kiedy tracimy pacjentów</h1>
+    <p class="lede">Porównaj dwa okresy krok po kroku, a potem sprawdź w czasie, od którego dnia zmienił się wybrany krok. Sesje, w których kupiono samo TelemediGO, są wyłączone z lejka konsultacji.</p>
+  </div>
+  <div class="presets">
+    <span class="note" style="align-self:center">Gotowe widoki:</span>
+    <button class="btn" data-p="ios">iOS Safari: logowanie od 17 III</button>
+    <button class="btn" data-p="l4">Przed i po kampaniach L4</button>
+    <button class="btn" data-p="yoy">Rok do roku</button>
+    <button class="btn" data-p="land">Strony wejścia</button>
+  </div>
+  <div class="panel">
+    <div class="controls">
+      <div class="ctl"><label for="f-a0">Okres A od</label><input type="date" id="f-a0" min="2024-10-01" max="2026-09-30"></div>
+      <div class="ctl"><label for="f-a1">A do</label><input type="date" id="f-a1" min="2024-10-01" max="2026-09-30"></div>
+      <div class="ctl"><label for="f-b0">Okres B od</label><input type="date" id="f-b0" min="2024-10-01" max="2026-09-30"></div>
+      <div class="ctl"><label for="f-b1">B do</label><input type="date" id="f-b1" min="2024-10-01" max="2026-09-30"></div>
+      <div class="ctl"><label for="f-split">Podział</label><select id="f-split"></select></div>
+    </div>
+    <div class="filters" id="f-filters"></div>
+  </div>
+  <div class="panel">
+    <h3>Lejek: A vs B</h3>
+    <div class="legend" id="f-ab"></div>
+    <div class="fun" id="f-funnel"></div>
+  </div>
+  <div class="panel">
+    <h3>Konwersja każdego kroku w segmentach</h3>
+    <div class="scroll"><table class="t" id="f-table"></table></div>
+    <p class="note">Czerwone pole: krok spadł o więcej niż 5 p.p. przy co najmniej 200 sesjach. „Utracone opłacone”: o ile mniej opłaconych konsultacji miesięcznie daje segment w B przy konwersji z A.</p>
+  </div>
+  <div class="panel">
+    <div class="controls">
+      <div class="ctl"><label for="f-ratio">Krok</label><select id="f-ratio"></select></div>
+      <div class="ctl"><span class="lbl">Rozdzielczość</span><div class="seg" id="f-gran"><button data-v="day" type="button">Dzień (7 dni)</button><button data-v="week" type="button">Tydzień</button></div></div>
+    </div>
+    <h3 id="f-ts-title"></h3>
+    <div id="f-ts"></div><div class="legend" id="f-legend"></div>
+    <div class="evlist" id="f-ev"></div>
+  </div>
+</section>
+
+<!-- ============ KANAŁY ============ -->
+<section class="tab" id="tab-kanaly" hidden>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span class="eyebrow">Ekonomia pozyskania</span>
+    <h1>Który kanał zwraca CAC</h1>
+    <p class="lede">CAC kanałów płatnych za klik = wydatki / nowi pacjenci przypisani do kanału. Afiliacja: 25 zł za pierwsze zamówienie. Źródło pacjenta to ostatnie niebezpośrednie wejście w 30 dniach przed pierwszym zakupem.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h3>Kanały w wybranym okresie pozyskania</h3>
+      <div class="controls"><div class="ctl"><label for="k-from">Kohorty od</label><input type="date" id="k-from" min="2024-10-01" max="2026-09-30"></div><div class="ctl"><label for="k-to">do</label><input type="date" id="k-to" min="2024-10-01" max="2026-09-30"></div></div></div>
+    <div class="scroll"><table class="t" id="k-table"></table></div>
+    <p class="note">Marża = przychód netto po zwrotach − koszt lekarza + opłaty GO. Liczona tylko dla pacjentów z pełnym oknem. Ustaw okres na X 2024 – IX 2025, żeby zobaczyć marżę 365 dni.</p>
+  </div>
+  <div class="panel"><h3>Nowi pacjenci tygodniowo wg grupy kanałów</h3><div id="k-chart"></div><div class="legend" id="k-legend"></div></div>
+  <div class="panel"><h3>Wydatki tygodniowo wg grupy kanałów</h3><div id="k-spend"></div><div class="legend" id="k-spend-legend"></div></div>
+</section>
+
+<!-- ============ PRIORYTETY ============ -->
+<section class="tab" id="tab-priorytety" hidden>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span class="eyebrow">Co robię po kolei</span>
+    <h1>Lista priorytetów</h1>
+    <p class="lede">Kolejność: wartość × pewność ÷ czas wdrożenia. Wartość to marża po koszcie lekarza, w złotych miesięcznie, przy dzisiejszej skali. Szacunki są zaokrąglone w dół.</p>
+  </div>
+  <div class="prio">
+    <article class="pitem"><div class="rank">1</div><div class="body">
+      <h2>Naprawić logowanie i rejestrację na iOS Safari</h2>
+      <p class="why">Od 17 III 2026 krok „termin → konto” na iOS Safari spadł z 75% do 60%. macOS Safari, Chrome na iOS i Android są bez zmian. Kroki po zalogowaniu też, więc to nie płatność. Trwa to siódmy miesiąc.</p>
+      <div class="facts">
+        <div><span class="k">Ile jest warte</span>≈ 115 opłaconych zamówień/mies., połowa to nowi pacjenci. ≈ 5–6 tys. zł marży/mies. (≈ 65–70 tys. zł/rok). Dotąd utracone ≈ 35 tys. zł.</div>
+        <div><span class="k">Po czym poznamy</span>Krok konta na iOS Safari wraca do ≥ 74% w ciągu 7 dni od poprawki. Widok „iOS Safari” w Lejkach, rozdzielczość dzienna.</div>
+        <div><span class="k">Ile zajmie</span>1–5 dni: odtworzenie na iOS (cookies/ITP, logowanie przez Apple, autouzupełnianie), poprawka, test.</div>
+      </div>
+      <a href="#lejki" data-goto="lejki:ios" class="small">Pokaż w lejku →</a>
+    </div></article>
+
+    <article class="pitem"><div class="rank">2</div><div class="body">
+      <h2>Przebudować kampanie L4: wyłączyć TikTok, Meta „L4 szybko” bez kodu i poza porannym szczytem</h2>
+      <p class="why">Kampanie L4 to dziś ≈ 29 tys. zł/mies. i ≈ 665 nowych pacjentów/mies. Retencja 90 dni 3–5%, 16% zwrotów. Marża w czasie życia ≈ 32–37 zł przy CAC z ostatnich 3 miesięcy 43–46 zł, więc każdy pozyskany pacjent jest stratny. Kody L4SZYBKO20 i TIKTOK25 obniżają cenę wizyty o 20–25 zł u ludzi, którzy przychodzą po jedno zwolnienie.</p>
+      <div class="facts">
+        <div><span class="k">Ile jest warte</span>≈ 5 tys. zł/mies. bezpośrednio (różnica CAC − marża) + odblokowanie porannych slotów dla pacjentów, którzy wracają (pkt 3). Uwolniony budżet ≈ 29 tys. zł/mies. do testu w innych kanałach.</div>
+        <div><span class="k">Po czym poznamy</span>Test z wyłączeniem na 4 tygodnie: nowi pacjenci z brandu, SEO i direct nie spadają (inkrementalność), opóźnienie rano &lt; 10 min, tygodniowa marża po mediach rośnie.</div>
+        <div><span class="k">Ile zajmie</span>Decyzja i zmiana w kampaniach: 1 dzień. Odczyt testu: 4–6 tygodni.</div>
+      </div>
+      <a href="#kanaly" data-goto="kanaly" class="small">Pokaż ekonomię kanałów →</a>
+    </div></article>
+
+    <article class="pitem"><div class="rank">3</div><div class="body">
+      <h2>Odetkać poranny szczyt internisty (6–12)</h2>
+      <p class="why">Rano opóźnienie startu wizyty wynosi średnio 23 min, a 90. percentyl przekracza 30 min. Po południu 3–4 min. To zabija retencję pacjentów z kanałów, które działają: przy 20+ min opóźnienia wraca 11,5% zamiast 28,4%, a 25% ocen to 1–2. Część rozwiąże pkt 2, resztę grafik lekarzy i limit slotów.</p>
+      <div class="facts">
+        <div><span class="k">Ile jest warte</span>≈ 380 wizyt/mies. z opóźnieniem ≥ 20 min. Wśród nich ≈ 140 nowych pacjentów core/mies., z których ≈ 24 więcej wracałoby. ≈ 2–3 tys. zł marży/mies. + oceny i polecenia.</div>
+        <div><span class="k">Po czym poznamy</span>Średnie opóźnienie rano &lt; 8 min, udział wizyt ≥ 20 min &lt; 5%, retencja 90 dni porannych kohort core wraca do ≈ 23%.</div>
+        <div><span class="k">Ile zajmie</span>2–4 tygodnie: przesunięcie dyżurów na 6–12, limit przyjmowanych terminów (pokazujemy realny czas oczekiwania).</div>
+      </div>
+      <a href="#kohorty" data-goto="kohorty:delay" class="small">Pokaż w kohortach →</a>
+    </div></article>
+
+    <article class="pitem"><div class="rank">4</div><div class="body">
+      <h2>Dashboard na czystych danych i marży, testy QA poza produkcją</h2>
+      <p class="why">Dashboard liczy wiersze (duplikaty) i konta testowe, a przychód brutto. 22 konta QA złożyły 2 102 zamówienia (≈ 130/mies.) ze statusem „completed”. Jeśli lekarze dostają za nie wynagrodzenie, to realny koszt. Bez tego każdy test z listy mierzymy na złych liczbach.</p>
+      <div class="facts">
+        <div><span class="k">Ile jest warte</span>Decyzyjnie najwięcej, bo warunkuje pomiar pkt 1–3 i 5. Do ≈ 3 tys. zł/mies., jeśli wizyty QA są płatne dla lekarzy (2 102 × 25 zł ≈ 52 tys. zł dotąd).</div>
+        <div><span class="k">Po czym poznamy</span>Liczba zamówień na dashboardzie = liczba unikalnych order_id bez kont testowych. Dashboard pokazuje przychód netto, marżę po lekarzu i mediach oraz kohorty.</div>
+        <div><span class="k">Ile zajmie</span>2–3 dni, równolegle z pkt 1. To narzędzie jest gotowym prototypem.</div>
+      </div>
+      <a href="#dane" data-goto="dane" class="small">Pokaż problemy w danych →</a>
+    </div></article>
+
+    <article class="pitem"><div class="rank">5</div><div class="body">
+      <h2>Odnowienia TelemediGO: przypomnienie i odnowienie jednym kliknięciem</h2>
+      <p class="why">GO nie odnawia się samo. Z 1 524 wygasłych członkostw odnowiono 83 (5,4%). U pacjentów, którzy nie odnowili, liczba zamówień w 90 dni po wygaśnięciu spada o 78% (0,172 → 0,037). Co miesiąc wygasa ok. 200 członkostw (X 2026: 176, I 2027: 242).</p>
+      <div class="facts">
+        <div><span class="k">Ile jest warte</span>Odnowienia z 5% do 20–25%: +30–40 odnowień/mies. × 89 zł ≈ 3 tys. zł/mies. + utrzymanie aktywności najbardziej lojalnych pacjentów.</div>
+        <div><span class="k">Po czym poznamy</span>A/B na kohortach wygaśnięć (przypomnienie 30/7/1 dzień przed vs brak). Odsetek odnowień i zamówienia w 90 dni po dacie wygaśnięcia.</div>
+        <div><span class="k">Ile zajmie</span>1–2 tygodnie. Kanały CRM (e-mail, SMS) już działają.</div>
+      </div>
+    </div></article>
+
+    <article class="pitem"><div class="rank">6</div><div class="body">
+      <h2>Logowanie w przeglądarkach w aplikacjach (Facebook, Instagram, TikTok)</h2>
+      <p class="why">W przeglądarkach wbudowanych krok konta to 61% wobec 72% poza nimi, a cała konwersja sesji 6,5% vs 15,9%. To jednak głównie ruch z kampanii L4, więc wartość zależy od decyzji z pkt 2. Ruszam to po niej.</p>
+      <div class="facts">
+        <div><span class="k">Ile jest warte</span>Do ≈ 140 opłaconych zamówień/mies. przy kroku konta 70%. Przy obecnym miksie to pacjenci o niskiej wartości (≈ 2–5 tys. zł/mies.).</div>
+        <div><span class="k">Po czym poznamy</span>Krok „termin → konto” dla platformy „In-app” ≥ 70%.</div>
+        <div><span class="k">Ile zajmie</span>1–2 tygodnie: logowanie kodem SMS lub BLIK bez hasła, przycisk „otwórz w przeglądarce”.</div>
+      </div>
+      <a href="#lejki" data-goto="lejki:l4" class="small">Pokaż w lejku →</a>
+    </div></article>
+  </div>
+</section>
+
+<!-- ============ NIEWIADOME ============ -->
+<section class="tab" id="tab-niewiadome" hidden>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span class="eyebrow">Czego z tych danych nie da się rozstrzygnąć</span>
+    <h1>Co trzeba sprawdzić testem albo innymi danymi</h1>
+  </div>
+  <div class="qa">
+    <div class="q"><div><div class="k">Nie wiemy</div>Czy pacjenci z kampanii L4 przyszliby i tak (z brandu, SEO, bezpośrednio)? Wtedy prawdziwy CAC jest wyższy, niż liczę. Albo odwrotnie: brand i direct też urosły w I–III 2026. Może to być efekt halo kampanii, ale też sezon infekcji.</div><div><div class="k">Co rozstrzygnie</div>Wyłączenie kampanii na 4 tygodnie w połowie województw (geo-holdout) i porównanie nowych pacjentów ze wszystkich kanałów.</div></div>
+    <div class="q"><div><div class="k">Nie wiemy</div>Czy poranne opóźnienia to tylko popyt z kampanii, czy także spadek podaży lekarzy (grafiki, odejścia)? W danych nie ma dostępności lekarzy.</div><div><div class="k">Co rozstrzygnie</div>Grafik dyżurów internistów per godzina od X 2024 i liczba aktywnych lekarzy. Zestawię je z wolumenem wizyt.</div></div>
+    <div class="q"><div><div class="k">Nie wiemy</div>Co dokładnie zmieniło się 17 III 2026 na iOS Safari i czy część pacjentów dokończyła zakup na innym urządzeniu. Brak powiązań między urządzeniami bez logowania.</div><div><div class="k">Co rozstrzygnie</div>Release log strony i aplikacji z marca 2026, logi błędów frontu, nagrania sesji iOS Safari na kroku konta.</div></div>
+    <div class="q"><div><div class="k">Nie wiemy</div>Czy samodzielny zakup GO (od 7 IX 2025) zwiększa liczbę wizyt, czy tylko daje rabat lojalnym pacjentom, którzy i tak by kupili. Kupują je osoby ze średnio 3,6 wcześniejszymi zamówieniami.</div><div><div class="k">Co rozstrzygnie</div>Grupa kontrolna 10–20% w kampanii <code>crm_go_upsell</code> bez oferty, porównanie marży po 6 miesiącach.</div></div>
+    <div class="q"><div><div class="k">Nie wiemy</div>Czy spadek aktywności po wygaśnięciu GO to skutek braku odnowienia, czy GO kupują ludzie w trakcie leczenia, które się kończy.</div><div><div class="k">Co rozstrzygnie</div>A/B przypomnienia o odnowieniu (pkt 5 priorytetów).</div></div>
+    <div class="q"><div><div class="k">Nie wiemy</div>Jak naprawdę rozkłada się atrybucja. Przyjąłem ostatnie niebezpośrednie wejście w 30 dniach. Retargeting koszyka jest zawsze ostatnim dotknięciem, więc może przejmować zasługi prospectingu.</div><div><div class="k">Co rozstrzygnie</div>Test wyłączenia retargetingu lub porównanie z modelem first-touch. Narzędzie łatwo przeliczyć na inny model.</div></div>
+    <div class="q"><div><div class="k">Nie wiemy</div>Czy 16% odmów L4 przy kampaniach to zdrowa polityka medyczna, czy rozjazd obietnicy z reklamy („L4 w 15 min”) z praktyką. To może być też ryzyko regulacyjne komunikacji.</div><div><div class="k">Co rozstrzygnie</div>Przegląd kreacji z działem medycznym i prawnym, ankieta po zwrocie, analiza powodów zwrotu.</div></div>
+    <div class="q"><div><div class="k">Nie wiemy</div>Pełnej marży. Brak prowizji płatniczych, kosztu e-mail/SMS, kosztów stałych i informacji, czy lekarze dostają wynagrodzenie za wizyty testowe QA.</div><div><div class="k">Co rozstrzygnie</div>Koszty z finansów (prowizje BLIK, karty, przelewu), potwierdzenie rozliczeń lekarzy za konta testowe.</div></div>
+    <div class="q"><div><div class="k">Nie wiemy</div>Retencji najmłodszych kohort (VII–IX 2026). Okno obserwacji jest za krótkie, więc wykresy pokazują je jako niepełne.</div><div><div class="k">Co rozstrzygnie</div>Czas. Codzienny podgląd w zakładce Kohorty, okno 30 dni.</div></div>
+    <div class="q"><div><div class="k">Nie wiemy</div>Dlaczego 11 482 konta (22%) nigdy nic nie kupiły: rejestracja bez płatności, testy, porzucenia?</div><div><div class="k">Co rozstrzygnie</div>Zdarzenia przed rejestracją i powody porzucenia (np. brak terminu, cena).</div></div>
+  </div>
+</section>
+
+<!-- ============ DANE ============ -->
+<section class="tab" id="tab-dane" hidden>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span class="eyebrow">Co w danych wyglądało podejrzanie i co z tym zrobiłem</span>
+    <h1>Dane i metoda</h1>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3>Problemy w danych</h3>
+      <ul class="clean">
+        <li><b>Duplikaty zamówień.</b> 604 order_id występują dwukrotnie, wszystkie między 10 a 24 VI 2026, z identyczną treścią. W tych dniach liczba zamówień jest zawyżona o ok. 35%. Deduplikuję po order_id.</li>
+        <li><b>Konta testowe QA.</b> Kod <code>TEST-QA</code>: 1 810 zamówień za 1,00 zł, internista, 1 minuta, desktop Chrome, wejście bezpośrednie, godz. 9–17, 22 konta z Warszawy bez zgody marketingowej. Te same konta mają jeszcze 292 zamówienia za 89 zł o tym samym profilu. Wykluczam całe konta (2 102 zamówienia, ok. 2 100 sesji). Testów przybywa: od 4/mies. do 100–160/mies.</li>
+        <li><b>Przychód na dashboardzie to brutto.</b> Zwroty (anulowane i refunded) to 6–8% kwoty i rosną.</li>
+        <li><b>Wrzesień 2025: więcej startów płatności niż logowań.</b> To nie błąd: od 7 IX 2025 można kupić samo GO (dwa ostatnie kroki lejka). Wyłączam takie sesje z lejka konsultacji.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Sprawdzone i w porządku</h3>
+      <ul class="clean">
+        <li>Każda płatność z analityki ma zamówienie lub GO, i odwrotnie (65 964 = 65 278 + 686).</li>
+        <li>Strefy czasowe: czas transakcji = UTC +1 h zimą i +2 h latem, przejścia DST poprawne.</li>
+        <li>Ceny katalogowe stałe, rabaty GO zgodne z regulaminem (−50% internista, −20% reszta), każde zamówienie z rabatem GO ma ważne członkostwo.</li>
+        <li>Brak botów (max 29 sesji na przeglądarkę w 2 lata), brak przeglądarek przypisanych do wielu kont, stosunek kliknięć do sesji stabilny (Google ≈ 93%, Meta ≈ 78%, TikTok ≈ 72%).</li>
+        <li>Spadki ruchu 1 XI, 25–26 XII i 1–3 V to święta: wszystkie kroki lejka spadają równo.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>Założenia</h3>
+    <div class="scroll"><table class="t">
+      <thead><tr><th>Co</th><th>Jak liczę</th></tr></thead>
+      <tbody>
+        <tr><td>Pacjent i kohorta</td><td style="white-space:normal;text-align:left;font-family:var(--f-body)">Konto z ≥ 1 opłaconym zamówieniem konsultacji (dowolny status). Kohorta = dzień pierwszego zamówienia w czasie polskim.</td></tr>
+        <tr><td>Retencja w N dni</td><td style="white-space:normal;text-align:left;font-family:var(--f-body)">Kolejne opłacone zamówienie konsultacji w ≤ N dni od pierwszego. Zakup samego GO nie liczy się jako powrót. Liczona tylko dla kohort z pełnym oknem.</td></tr>
+        <tr><td>Marża</td><td style="white-space:normal;text-align:left;font-family:var(--f-body)">amount_paid − refund_amount − koszt lekarza (25 zł internista, 200 zł psychiatra, 100 zł pozostali, za completed i refunded) + 89 zł za każde GO. Bez prowizji płatniczych i kosztów stałych.</td></tr>
+        <tr><td>Źródło pacjenta</td><td style="white-space:normal;text-align:left;font-family:var(--f-body)">Ostatnie niebezpośrednie wejście w 30 dniach przed pierwszym zamówieniem, po wszystkich przeglądarkach powiązanych z kontem przez logowanie. Brak takiego wejścia = „Bezpośrednie”. Zgodność z kanałem sesji zakupowej: 86–93%.</td></tr>
+        <tr><td>CAC</td><td style="white-space:normal;text-align:left;font-family:var(--f-body)">Wydatki kanału w miesiącu / nowi pacjenci kanału w miesiącu. Afiliacja: 25 zł. SEO, direct, polecenia i CRM bez kosztu.</td></tr>
+        <tr><td>Kroki lejka</td><td style="white-space:normal;text-align:left;font-family:var(--f-body)">Sesja → wybór usługi → wybór terminu → logowanie/konto → start płatności → opłacona konsultacja. Sesje z zakupem samego GO wyłączone.</td></tr>
+        <tr><td>Okres YoY</td><td style="white-space:normal;text-align:left;font-family:var(--f-body)">X 2025 – IX 2026 vs X 2024 – IX 2025, tak jak na dashboardzie.</td></tr>
+      </tbody></table></div>
+  </div>
+  <div class="panel">
+    <h3>Jak to zbudowałem</h3>
+    <p>Analiza w Pythonie i DuckDB (surowe CSV → warstwa czysta z decyzjami z audytu zapisanymi w kodzie → eksport). Narzędzie to jedna strona HTML: dane na poziomie pacjenta i sesji są w niej spakowane (ok. 1,3 MB), a kohorty i lejki liczą się w przeglądarce przy każdej zmianie filtra. Pracowałem z Claude (Claude Code). Pełny ślad pracy, łącznie ze ślepymi uliczkami, jest w repozytorium: <code>notes/WORKLOG.md</code> i <code>src/</code>.</p>
+  </div>
+</section>
+</main>
