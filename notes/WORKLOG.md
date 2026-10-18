@@ -112,3 +112,12 @@ Drobniejsze: nowi pacjenci na dashboardzie obejmują pierwsze zakupy anulowane l
 - Pierwsza wersja „optimum modelu” podwajała brand i retargeting. To artefakt atrybucji, a nie realna szansa, więc w optimum zostają na obecnym poziomie.
 - Rekomendacja: budżet 60,5 → 31,2 tys. zł/mies., ok. 580 nowych pacjentów z płatnych mniej, zysk po mediach z kohorty miesiąca 22,1 → 31,8 tys. zł (≈ +116 tys. zł rocznie). Nie wlicza to dodatkowego zysku z rozładowania porannych kolejek.
 - W narzędziu: zakładka Kanały ma tabelę rekomendacji (werdykt, CAC, koszt kolejnego pacjenta, marża, budżet docelowy, uzasadnienie) i symulator z edytowalnymi budżetami. Pkt 2 priorytetów rozszerzony o całą przebudowę mediów.
+
+## Krok 14: „gdzie tracimy, gdzie zyskujemy” w kohortach (prośba Sebastiana: decyzja zamiast samych danych)
+- Porównanie rok do roku na tych samych miesiącach (X–III vs X–III), żeby sezon infekcji był po obu stronach. Miara: zysk na nowym pacjencie w 180 dni = marża (z GO) − CAC.
+- Wynik: 54 zł → 44 zł na nowego pacjenta. Przy ok. 2 060 nowych/mies. to −19 tys. zł/mies. względem wartości sprzed roku. Łącznie nowe kohorty dają jednak więcej (91,6 vs 80,3 tys. zł/mies.), bo pacjentów jest +38%.
+- Mostek (rozkład zmiany na efekt miksu i efekt wyniku w segmencie): kampanie L4 odpowiadają za −16,5 z −19,2 tys. zł/mies.
+- **Błąd 1 (poprawiony):** pierwsza wersja mostka liczyła miks jako `w_a·m_a − w_b·m_b − efekt wyniku`, czyli nie względem średniej. Kampanie L4 wychodziły wtedy na −1,3 tys. zł, a ich efekt rozmywał się po innych wierszach jako „ujemny miks”. Poprawione na standardowe: wynik = w_a(m_a − m_b), miks = (w_a − w_b)(m_b − M_b), a nowy segment ma m_b = M_b. Suma wierszy = cała zmiana (sprawdzone na tabeli).
+- **Błąd 2 (poprawiony):** ranking „tracimy” pokazywał na górze „internista”, „bez GO”, „< 10 min”. To ten sam ruch L4 widziany pod innym kątem. Teraz kampanie L4 są osobną pozycją, a resztę segmentów liczę bez nich.
+- **Błąd 3 (poprawiony):** okno 90 dni karało kampanie, w których koszt pacjenta zwraca się wolniej (Google wychodził jako „zyskujemy, bo go mniej”). Przeszedłem na 180 dni.
+- Obserwacja: opóźnienie 20+ min obniża retencję 180 d (12% vs 28%), ale marża 180 d tych pacjentów jest tylko trochę niższa (72 zł vs 74 zł). Strata ujawnia się dopiero w dłuższym horyzoncie i w liczbie powracających. Przy mierze „retencja” jest widoczna, przy mierze „zysk 180 d” prawie nie.

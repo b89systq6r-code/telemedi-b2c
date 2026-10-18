@@ -197,3 +197,14 @@ ul.clean{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;m
 .sim-sum .v{font:600 22px var(--f-display);font-variant-numeric:tabular-nums}
 .sim-sum .d{font:12px var(--f-mono)}
 input.bud{width:96px;font:13px var(--f-mono);text-align:right;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:4px 6px}
+
+/* gdzie tracimy / zyskujemy */
+.gl-list{margin:8px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.gl-list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;align-items:baseline}
+.gl-list .seg-name{font-weight:600}
+.gl-list .seg-dim{font:11px var(--f-mono);color:var(--ink-3);letter-spacing:.03em}
+.gl-list .amt{font:600 16px var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
+.gl-list .det{grid-column:1/-1;font-size:12.5px;color:var(--ink-2)}
+.gl-list .bar{grid-column:1/-1;height:5px;border-radius:3px;background:var(--surface-2);overflow:hidden}
+.gl-list .bar i{display:block;height:100%}
+.gl-col h3{display:flex;align-items:center;gap:8px}

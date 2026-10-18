@@ -83,7 +83,25 @@
   <div style="display:flex;flex-direction:column;gap:8px">
     <span class="eyebrow">// kohorty dzienne, tygodniowe i miesięczne</span>
     <h1>Kto kupił, kto wrócił i co to zmieniło</h1>
-    <p class="lede">Kohorta to dzień pierwszego opłaconego zamówienia. Wybierz miarę, okno i podział. Linie przerywane z numerami to zdarzenia znalezione w danych.</p>
+    <p class="lede">Kohorta to pacjenci, którzy pierwszy raz zapłacili w tym samym dniu, tygodniu lub miesiącu. Na górze decyzja: gdzie tracimy i gdzie zyskujemy, w złotówkach. Niżej dane do samodzielnego sprawdzenia.</p>
+  </div>
+  <div class="panel" id="gl">
+    <div class="panel-head"><h2>Gdzie tracimy, gdzie zyskujemy</h2>
+      <div class="controls">
+        <div class="ctl"><label for="gl-metric">Miara</label><select id="gl-metric"><option value="profit">Zysk na pacjencie w 180 dni (marża − CAC)</option><option value="ret">Retencja 180 dni</option></select></div>
+      </div></div>
+    <p class="lede" style="font-size:15.5px" id="gl-head"></p>
+    <div class="grid2">
+      <div class="gl-col"><h3 class="neg">Tracimy</h3><ol class="gl-list" id="gl-loss"></ol></div>
+      <div class="gl-col"><h3 class="pos">Zyskujemy</h3><ol class="gl-list" id="gl-gain"></ol></div>
+    </div>
+    <p class="note">Porównanie kohort z tych samych miesięcy: X 2024 – III 2025 vs X 2025 – III 2026, więc sezon infekcji jest po obu stronach. Okno 180 dni, bo marża z pacjenta rośnie jeszcze po 90 dniach, a koszt pozyskania płacimy od razu. Kampanie L4 to nowy ruch, więc porównuję je ze średnim pacjentem sprzed roku. Pozostałe segmenty liczę bez pacjentów z kampanii L4, żeby ten sam efekt nie wracał pod inną nazwą (np. „internista” albo „bez GO”). Każdy wiersz to wpływ segmentu na zysk z nowego pacjenta: zmiana jego wyniku plus zmiana jego udziału, w złotówkach miesięcznie przy dzisiejszej liczbie pacjentów. Segmenty z co najmniej 300 pacjentami teraz i 100 rok temu. Segmenty z różnych podziałów częściowo się pokrywają, więc kwot z listy nie sumuj. Sumę daje tabela poniżej.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h3>Skąd zmiana: mostek zysku na nowym pacjencie</h3>
+      <div class="controls"><div class="ctl"><label for="gl-dim">Rozbij według</label><select id="gl-dim"></select></div></div></div>
+    <div class="scroll"><table class="t" id="gl-bridge"></table></div>
+    <p class="note"><b>Efekt miksu</b>: zmiana, bo segment ma większy lub mniejszy udział wśród nowych pacjentów. <b>Efekt wyniku</b>: zmiana, bo pacjenci w tym samym segmencie zarabiają inaczej niż rok wcześniej. Suma wierszy = cała zmiana zysku na pacjencie. Kwoty w zł/mies. przy dzisiejszej liczbie nowych pacjentów.</p>
   </div>
   <div class="presets">
     <span class="note" style="align-self:center">Gotowe widoki:</span>

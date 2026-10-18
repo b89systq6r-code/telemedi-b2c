@@ -252,6 +252,7 @@ function renderSegTable(){
   $('#c-seg-range').textContent=`Kohorty od ${dayStr(CS.from)} do ${dayStr(CS.to)}. Retencja i marża liczone tylko dla pacjentów z pełnym oknem obserwacji. Marża = przychód netto po zwrotach − koszt lekarza + opłaty GO. CAC = wydatki kanału w miesiącu / nowi pacjenci kanału w miesiącu (afiliacja: 25 zł).`;
 }
 function initCohorts(){
+  initGL();
   const sp=$('#c-split'); sp.innerHTML='<option value="">bez podziału</option>'+Object.entries(PDIMS).map(([k,d])=>`<option value="${k}">${d.lab}</option>`).join(''); sp.value=CS.split;
   sp.onchange=()=>{CS.split=sp.value; renderCohorts();};
   const me=$('#c-metric'); me.value=CS.metric; me.onchange=()=>{CS.metric=me.value; renderCohorts();};
@@ -282,6 +283,65 @@ function applyCohortPreset(p){
   makeFilters($('#c-filters'), fd, CS.filter, renderCohorts); renderCohorts();
 }
 
+
+/* ---------- gdzie tracimy / zyskujemy (kohorty rok do roku, te same miesiące) ---------- */
+const GL={metric:'profit', dim:'grp', N:180, B:[isoDay('2024-10-01'),isoDay('2025-03-31')], A:[isoDay('2025-10-01'),isoDay('2026-03-31')], months:6};
+const GL_DIMS=['grp','ch','pu','sp','di','pc','st','dl','mo','pf','gf','ag','cs'];
+function glValue(i,cN){ return GL.metric==='profit' ? cN[i]-P.cac[i] : (retWithin(i,GL.N)?1:0); }
+function glStats(dimKey, coreOnly){
+  const dim=PDIMS[dimKey], nv=dim.vals.length, c90=cmWithin(GL.N,true);
+  const S={a:{n:0,sum:0,seg:[...Array(nv)].map(()=>({n:0,sum:0}))}, b:{n:0,sum:0,seg:[...Array(nv)].map(()=>({n:0,sum:0}))}};
+  for(let i=0;i<NP;i++){ if(coreOnly && chToGrp(P.ch[i])===0) continue; const d=P.cd[i]; const k = d>=GL.A[0]&&d<=GL.A[1]?'a' : d>=GL.B[0]&&d<=GL.B[1]?'b' : null; if(!k) continue;
+    const v=glValue(i,c90), g=dim.get(i); S[k].n++; S[k].sum+=v; S[k].seg[g].n++; S[k].seg[g].sum+=v; }
+  const Ma=S.a.sum/S.a.n, Mb=S.b.sum/S.b.n, perMo=S.a.n/GL.months;
+  const rows=dim.vals.map((name,g)=>{ const a=S.a.seg[g], b=S.b.seg[g]; const wa=a.n/S.a.n, wb=b.n/S.b.n;
+    const ma=a.n?a.sum/a.n:null, mb=b.n?b.sum/b.n:null, mbx=mb??Mb;
+    // standardowy rozkład: wynik = w_a(m_a - m_b), miks = (w_a - w_b)(m_b - M_b); nowy segment: m_b := M_b
+    const rate=a.n? wa*(ma-mbx) : 0, mix=(wa-wb)*(mbx-Mb);
+    return {g,name,na:a.n,nb:b.n,wa,wb,ma,mb,rate,mix,total:rate+mix,isNew:!b.n||b.n<30}; });
+  return {Ma,Mb,perMo,rows,na:S.a.n,nb:S.b.n};
+}
+const unit = v => GL.metric==='profit' ? fmtZl(v) : (v*100).toFixed(1).replace('.',',')+' p.p.';
+const perMoFmt = v => GL.metric==='profit' ? (v>0?'+':'')+fmtZl(v)+'/mies.' : (v>0?'+':'')+fmtInt(v)+' powrotów/mies.';
+function renderGL(){
+  const base=glStats('grp'); const lpm0=base.nb/GL.months;
+  const ch = GL.metric==='profit'
+    ? `Nowy pacjent z kohort X 2025 – III 2026 zarabia w 180 dni po odjęciu CAC <b>${fmtZl(base.Ma)}</b>, rok wcześniej <b>${fmtZl(base.Mb)}</b>. Przy ${fmtInt(base.perMo)} nowych pacjentach miesięcznie to <b class="${base.Ma<base.Mb?'neg':'pos'}">${perMoFmt((base.Ma-base.Mb)*base.perMo)}</b> mniej, niż gdyby pacjent był wart tyle co rok temu. Łącznie nowe kohorty dają ${fmtZl(base.Ma*base.perMo)}/mies. wobec ${fmtZl(base.Mb*lpm0)}/mies. rok temu, mimo że pacjentów jest o ${Math.round((base.perMo/lpm0-1)*100)}% więcej.`
+    : `Retencja 180 dni nowych pacjentów: <b>${fmtPct(base.Ma)}</b> w kohortach X 2025 – III 2026 wobec <b>${fmtPct(base.Mb)}</b> rok wcześniej. Przy ${fmtInt(base.perMo)} nowych pacjentach miesięcznie to <b class="${base.Ma<base.Mb?'neg':'pos'}">${perMoFmt((base.Ma-base.Mb)*base.perMo)}</b> mniej, niż przy retencji sprzed roku.`;
+  $('#gl-head').innerHTML=ch;
+  // ranking efektów wyniku po wszystkich wymiarach
+  const items=[];
+  // 1) nowy segment: kampanie L4, wpływ względem średniej sprzed roku
+  const g0=base.rows.find(r=>r.g===0); if(g0 && g0.na>=300) items.push({k:'grp',name:g0.name,imp:g0.na/GL.months*(g0.ma-base.Mb),det:`nowy ruch: ${unit(g0.ma)} na pacjenta wobec średniej ${unit(base.Mb)} sprzed roku, ${fmtInt(g0.na/GL.months)} pacjentów/mies.`});
+  // 2) pozostałe segmenty liczone BEZ pacjentów z kampanii L4, żeby nie powtarzać tego samego efektu pod inną nazwą
+  GL_DIMS.filter(k=>k!=='grp').forEach(k=>{ const st=glStats(k,true); st.rows.forEach(r=>{ if(r.na<300||r.nb<100) return;
+    const imp=r.total*st.perMo, mixPart=r.mix*st.perMo;
+    const why = Math.abs(mixPart)>Math.abs(imp-mixPart) ? `udział ${fmtPct(r.wb,0)} → ${fmtPct(r.wa,0)} nowych pacjentów przy ${unit(r.ma)} na pacjenta (średnia ${unit(st.Mb)})` : `${unit(r.mb)} → ${unit(r.ma)} na pacjenta`;
+    items.push({k,core:true,name:r.name,imp,det:`${why}, ${fmtInt(r.na/GL.months)} pacjentów/mies. (bez kampanii L4)`}); }); });
+  const loss=items.filter(x=>x.imp<0).sort((a,b)=>a.imp-b.imp).slice(0,6), gain=items.filter(x=>x.imp>0).sort((a,b)=>b.imp-a.imp).slice(0,6);
+  const mx=Math.max(1,...items.map(x=>Math.abs(x.imp)));
+  const li=(x,col)=>`<li><div><div class="seg-dim">${PDIMS[x.k].lab}</div><div class="seg-name">${x.name}</div></div><div class="amt ${x.imp<0?'neg':'pos'}">${perMoFmt(x.imp)}</div><div class="bar"><i style="width:${(Math.abs(x.imp)/mx*100).toFixed(1)}%;background:var(${col})"></i></div><div class="det">${x.det}</div></li>`;
+  $('#gl-loss').innerHTML=loss.map(x=>li(x,'--bad')).join('')||'<li>Brak segmentów ze spadkiem.</li>';
+  $('#gl-gain').innerHTML=gain.map(x=>li(x,'--good')).join('')||'<li>Brak segmentów ze wzrostem.</li>';
+  renderGLBridge();
+}
+function renderGLBridge(){
+  const st=glStats(GL.dim), m=st.perMo;
+  const rows=st.rows.filter(r=>r.na+r.nb>0).sort((a,b)=>a.total-b.total);
+  let h=`<thead><tr><th>${PDIMS[GL.dim].lab}</th><th>Udział wśród nowych<br>rok temu → teraz</th><th>${GL.metric==='profit'?'Zysk na pacjencie 180 d':'Retencja 180 d'}<br>rok temu → teraz</th><th>Efekt miksu</th><th>Efekt wyniku</th><th>Razem</th><th>Ocena</th></tr></thead><tbody>`;
+  rows.forEach(r=>{ const tot=r.total*m, mix=r.mix*m, rate=r.rate*m;
+    const tag = Math.abs(tot) < (GL.metric==='profit'?500:3) ? '<span class="pill keep">bez zmian</span>' : tot<0 ? '<span class="pill cut">tracimy</span>' : '<span class="pill up">zyskujemy</span>';
+    const fm=v=> GL.metric==='profit' ? `<span class="${v<-1?'neg':v>1?'pos':'muted'}">${v>0?'+':''}${fmtZl(v)}</span>` : `<span class="${v<-0.5?'neg':v>0.5?'pos':'muted'}">${v>0?'+':''}${fmtInt(v)}</span>`;
+    h+=`<tr><td><i class="swatch" style="background:${css(SERIES[r.g%8])}"></i>${r.name}</td><td>${fmtPct(r.wb,0)} → ${fmtPct(r.wa,0)}</td><td>${r.mb==null?'<span class="muted">nowy</span>':unit(r.mb)} → ${r.ma==null?'–':unit(r.ma)}</td><td>${fm(mix)}</td><td>${fm(rate)}</td><td><b>${fm(tot)}</b></td><td>${tag}</td></tr>`; });
+  const T0=(st.Ma-st.Mb)*m;
+  h+=`<tr class="hl"><td><b>Razem</b></td><td>100%</td><td>${unit(st.Mb)} → ${unit(st.Ma)}</td><td></td><td></td><td><b class="${T0<0?'neg':'pos'}">${T0>0?'+':''}${GL.metric==='profit'?fmtZl(T0):fmtInt(T0)}</b></td><td>${GL.metric==='profit'?'zł/mies.':'powrotów/mies.'}</td></tr>`;
+  $('#gl-bridge').innerHTML=h+'</tbody>';
+}
+function initGL(){
+  const ds=$('#gl-dim'); ds.innerHTML=GL_DIMS.map(k=>`<option value="${k}">${PDIMS[k].lab}</option>`).join(''); ds.value=GL.dim; ds.onchange=()=>{GL.dim=ds.value; renderGLBridge();};
+  const ms=$('#gl-metric'); ms.value=GL.metric; ms.onchange=()=>{GL.metric=ms.value; renderGL();};
+  renderGL();
+}
 /* ---------- ZAKŁADKA: LEJKI ---------- */
 const STEPS=['Sesja','Wybór usługi','Wybór terminu','Logowanie / konto','Start płatności','Opłacona konsultacja'];
 const STEPBIT=[0,1,2,4,8,16];
