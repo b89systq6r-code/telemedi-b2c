@@ -2,7 +2,7 @@
 
 Autor: Sebastian Szablewski. Praca z AI: Claude (Claude Code).
 
-- **Narzędzie:** `dist/index.html`, jedna strona bez instalacji. Działa offline i na GitHub Pages.
+- **Narzędzie:** `index.html` (kopia `dist/index.html`), jedna strona bez instalacji. Działa offline i na GitHub Pages.
 - **Ślad pracy:** `notes/WORKLOG.md` (chronologicznie, łącznie ze ślepymi uliczkami) + historia commitów + eksport rozmowy z AI.
 
 ## Struktura
