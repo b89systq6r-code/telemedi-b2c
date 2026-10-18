@@ -1,7 +1,7 @@
 """Eksport danych do narzędzia (tool/data.js): kolumnowe tablice binarne, gzip + base64.
 Pacjenci (kohorty) + zdarzenia po 1. zamówieniu + sesje (lejki) + dzienne wydatki + agregaty operacyjne."""
 import duckdb, gzip, base64, json, numpy as np
-con = duckdb.connect('data/tm.duckdb', read_only=True)
+con = duckdb.connect('data/tm.duckdb')
 D0 = '2024-10-01'
 
 def b64(arrs):
@@ -134,8 +134,33 @@ bridge = {
                'cm': float(cl.cm[k]), 'go_rev': float(go_rev.r[k]), 'spend': float(spd.s[k]), 'aff': float(aff.a[k]),
                'ret90': float(ret.r[k])} for k in ['P1','P2']},
 }
+# ---- opłacalność kampanii płatnych: CAC teraz, elastyczność, marża 12 mies. ----
+con_rw = con
+con_rw.execute("""CREATE OR REPLACE TABLE camp_pat AS
+SELECT p.user_id, coalesce(p.acq_campaign, p.acq_channel) camp, p.acq_channel ch, p.first_at,
+ coalesce((SELECT sum(o.net_rev-o.doc_cost) FROM orders o WHERE o.user_id=p.user_id AND o.created_at<=p.first_at+INTERVAL 180 DAY),0)
+  + coalesce((SELECT count(*)*89 FROM go g WHERE g.user_id=p.user_id AND g.purchased_at<=p.first_at+INTERVAL 180 DAY),0) m180,
+ coalesce((SELECT sum(o.net_rev-o.doc_cost) FROM orders o WHERE o.user_id=p.user_id AND o.created_at<=p.first_at+INTERVAL 365 DAY),0)
+  + coalesce((SELECT count(*)*89 FROM go g WHERE g.user_id=p.user_id AND g.purchased_at<=p.first_at+INTERVAL 365 DAY),0) m365
+FROM patients p""")
+camps = []
+for (camp, ch) in con_rw.execute("SELECT DISTINCT utm_campaign, channel(utm_source,utm_medium,utm_campaign) FROM raw_spend").fetchall():
+    s0, = con_rw.execute("SELECT sum(spend_pln)/3 FROM raw_spend WHERE utm_campaign=? AND date BETWEEN '2026-07-01' AND '2026-09-30'", [camp]).fetchone()
+    n0, = con_rw.execute("SELECT count(*)/3.0 FROM camp_pat WHERE camp=? AND first_at BETWEEN '2026-07-01' AND '2026-10-01'", [camp]).fetchone()
+    w = con_rw.execute("""WITH sp AS (SELECT date_trunc('week',date) w, sum(spend_pln) s FROM raw_spend WHERE utm_campaign=? GROUP BY 1),
+       np AS (SELECT date_trunc('week',first_at)::date w, count(*) n FROM camp_pat WHERE camp=? GROUP BY 1)
+       SELECT s, n FROM sp JOIN np USING(w) WHERE w>'2024-10-07' AND w<'2026-09-28' AND s>0 AND n>0""", [camp, camp]).fetchall()
+    ws = np.array(w, dtype=float); b_raw = float(np.polyfit(np.log(ws[:,0]), np.log(ws[:,1]), 1)[0])
+    n365, l365 = con_rw.execute("SELECT count(*), avg(m365) FROM camp_pat WHERE camp=? AND first_at<='2025-09-30'", [camp]).fetchone()
+    l180, = con_rw.execute("SELECT avg(m180) FROM camp_pat WHERE camp=? AND first_at<='2026-04-02'", [camp]).fetchone()
+    ltv, basis = (l365, '365 dni') if n365 >= 200 else (l180, '180 dni (marża się już nie zmienia)')
+    camps.append(dict(camp=camp, ch=ch, s0=round(s0), n0=round(n0,1), b_raw=round(b_raw,2), b=round(min(1.0,max(0.5,b_raw)),2),
+                      ltv=round(ltv,1), basis=basis))
+camps.sort(key=lambda c: -c['s0'])
+print(json.dumps(camps, ensure_ascii=False))
+
 data = dict(D0=D0, ndays=730, dims=dict(CH=CH, PURP=PURP, SPEC=SPEC, DISC=DISC, PROMO=PROMO, STAT=STAT, DELAY=DELAY, PLAT=PLAT, AGE=AGE, CITY=CITY, LAND=LAND, DEV=DEV),
-            pmeta=pm, pblob=pblob, smeta=sm, sblob=sblob, spend=spend, ops=ops, bridge=bridge, npat=len(p), nev=len(ev), nses=len(s))
+            pmeta=pm, pblob=pblob, smeta=sm, sblob=sblob, spend=spend, ops=ops, bridge=bridge, camps=camps, npat=len(p), nev=len(ev), nses=len(s))
 js = 'window.TM_DATA=' + json.dumps(data, ensure_ascii=False, separators=(',',':'), default=float) + ';'
 open('tool/data.js','w').write(js)
 print('data.js MB', round(len(js)/1e6,2))

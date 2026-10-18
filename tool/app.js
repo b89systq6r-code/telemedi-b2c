@@ -377,11 +377,58 @@ function renderChannels(){
   legend($('#k-spend-legend'),s2);
 }
 function initChannels(){
+  $$('[data-sim]').forEach(b=>b.onclick=()=>setSim(b.dataset.sim));
+  renderInvest();
   const f=$('#k-from'), t=$('#k-to'); f.value=dayISO(KS.from); t.value=dayISO(KS.to);
   f.onchange=()=>{KS.from=Math.max(0,isoDay(f.value)); renderChannels();}; t.onchange=()=>{KS.to=Math.min(LAST,isoDay(t.value)); renderChannels();};
   redraws.push(()=>{ if(!$('#tab-kanaly').hidden) renderChannels(); });
 }
 
+
+/* ---------- rekomendacja budżetu i symulator ---------- */
+const CAMPLAB={meta_prosp_l4_szybko:'Meta „L4 szybko”',tt_prosp_l4_15min:'TikTok „L4 w 15 min”',gs_generic_erecepta:'Google: e-recepta',gs_generic_lekarz_online:'Google: lekarz online',meta_prosp_lekarz_online:'Meta: lekarz online',gs_generic_specjalisci:'Google: specjaliści',gs_generic_l4:'Google: L4',gs_brand:'Google: brand',meta_rmkt_koszyk:'Meta: retargeting koszyka'};
+const REC={
+  meta_prosp_l4_szybko:{v:'cut',lab:'Wytnij do testu',bud:3000,why:'Marża z pacjenta (38 zł) nie pokrywa kosztu kolejnego pacjenta (ok. 51 zł). Zostaw ok. 3 tys. zł jako test bez kodu rabatowego, z wizytami poza porankiem i z grupą kontrolną.'},
+  tt_prosp_l4_15min:{v:'cut',lab:'Wyłącz',bud:0,why:'Najsłabsza marża (32 zł) przy najwyższym koszcie kolejnego pacjenta (ok. 54 zł). Retencja 3%.'},
+  gs_generic_erecepta:{v:'cut',lab:'Przytnij',bud:5000,why:'Najlepsi pacjenci (101 zł marży w roku), ale budżet przekroczył punkt nasycenia: kolejny pacjent kosztuje ok. 158 zł. Powrót do ok. 5 tys. zł oddaje mało pacjentów i dużo pieniędzy.'},
+  gs_generic_lekarz_online:{v:'up',lab:'Skaluj',bud:10150,why:'Liczba pacjentów rośnie proporcjonalnie do budżetu, kolejny kosztuje ok. 64 zł przy marży 79 zł. Zwiększaj o +25% co 2 tygodnie i zatrzymaj się, gdy CAC przekroczy 70 zł.'},
+  meta_prosp_lekarz_online:{v:'up',lab:'Skaluj ostrożnie',bud:5850,why:'Kolejny pacjent ok. 72 zł przy marży 79 zł. Mały zapas, więc +25% i obserwacja CAC.'},
+  gs_generic_specjalisci:{v:'cut',lab:'Wyłącz i przebuduj',bud:0,why:'Traci na każdym pacjencie (marża 46 zł przy CAC 70–78 zł). U specjalisty zostaje 9–19 zł na wizytę (cena 109–119 zł, lekarz 100 zł). Bez zmiany ceny lub stawki lekarza płatne pozyskanie się nie zwróci.'},
+  gs_generic_l4:{v:'keep',lab:'Utrzymaj',bud:4207,why:'Na granicy: kolejny pacjent ok. 66 zł przy marży 73 zł. Dobry kandydat do pierwszego cięcia, jeśli poranne kolejki nie znikną.'},
+  gs_brand:{v:'test',lab:'Utrzymaj, testuj',bud:1941,why:'Wygląda świetnie (CAC 9 zł), ale część tych osób szukała Telemedi i weszłaby z wyników bezpłatnych. Test: wyłączenie na 2 tygodnie i porównanie wejść z SEO i direct.'},
+  meta_rmkt_koszyk:{v:'test',lab:'Utrzymaj, testuj',bud:1090,why:'Retargeting jest zawsze ostatnim kliknięciem, więc przejmuje zasługi innych kampanii. Test z grupą kontrolną przed skalowaniem.'},
+};
+const SIM={};
+const simN=(c,bud)=> bud<=0?0 : c.n0*Math.pow(bud/c.s0, c.b);
+function simOpt(c){ if(c.camp==='gs_brand'||c.camp==='meta_rmkt_koszyk') return c.s0; let best=0,bp=-1e9; for(let k=0;k<=400;k++){ const s=2*c.s0*k/400, p=simN(c,s)*c.ltv-s; if(p>bp){bp=p;best=s;} } return Math.round(best/50)*50; }
+function renderInvest(){
+  const C=T.camps;
+  let h='<thead><tr><th>Kampania</th><th>Rekomendacja</th><th>Budżet teraz</th><th>Nowi / mies.</th><th>CAC teraz</th><th>Koszt kolejnego pacjenta</th><th>Marża 12 mies.</th><th>Zysk na pacjencie</th><th>Budżet docelowy</th></tr></thead><tbody>';
+  C.forEach(c=>{ const r=REC[c.camp]||{v:'keep',lab:'Utrzymaj',bud:c.s0,why:''}, cac=c.s0/c.n0, marg=cac/c.b, prof=c.ltv-cac;
+    h+=`<tr><td><b>${CAMPLAB[c.camp]||c.camp}</b><div class="why">${r.why}</div></td><td><span class="pill ${r.v}">${r.lab}</span></td><td>${fmtZl(c.s0)}</td><td>${fmtInt(c.n0)}</td><td>${fmtZl(cac)}</td>
+    <td class="${marg>c.ltv?'cell-bad':''}">${fmtZl(marg)}</td><td>${fmtZl(c.ltv)}</td><td class="${prof<0?'neg':'pos'}">${prof>0?'+':''}${fmtZl(prof)}</td>
+    <td>${fmtZl(r.bud)} <span class="${r.bud<c.s0?'neg':r.bud>c.s0?'pos':'muted'}">${r.bud===c.s0?'':((r.bud/c.s0-1)*100>0?'+':'')+Math.round((r.bud/c.s0-1)*100)+'%'}</span></td></tr>`; });
+  $('#inv-table').innerHTML=h+'</tbody>';
+  if(!Object.keys(SIM).length) setSim('rec'); else renderSim();
+}
+function setSim(mode){ T.camps.forEach(c=>{ SIM[c.camp]= mode==='now'?c.s0 : mode==='rec'?(REC[c.camp]?.bud??c.s0) : simOpt(c); });
+  $$('[data-sim]').forEach(b=>b.classList.toggle('primary', b.dataset.sim===mode)); renderSim(); }
+function renderSim(){
+  const C=T.camps; let S0=0,S1=0,N0=0,N1=0,P0=0,P1=0;
+  let h='<thead><tr><th>Kampania</th><th>Budżet / mies.</th><th>Zmiana</th><th>Nowi pacjenci / mies.</th><th>Marża 12 mies. z kohorty</th><th>Zysk po mediach</th></tr></thead><tbody>';
+  C.forEach(c=>{ const s=SIM[c.camp], n=simN(c,s), m=n*c.ltv, p=m-s, p0=c.n0*c.ltv-c.s0;
+    S0+=c.s0; S1+=s; N0+=c.n0; N1+=n; P0+=p0; P1+=p;
+    h+=`<tr><td>${CAMPLAB[c.camp]||c.camp}</td><td><input class="bud" type="number" min="0" step="250" id="sim-${c.camp}" value="${Math.round(s)}" aria-label="Budżet ${CAMPLAB[c.camp]||c.camp}"></td>
+    <td class="${s<c.s0?'neg':s>c.s0?'pos':'muted'}">${s===c.s0?'0%':((s/c.s0-1)*100>0?'+':'')+Math.round((s/c.s0-1)*100)+'%'}</td><td>${fmtInt(n)} <span class="muted">(${fmtInt(c.n0)})</span></td><td>${fmtZl(m)}</td><td class="${p<0?'neg':''}">${fmtZl(p)} <span class="muted">(${fmtZl(p0)})</span></td></tr>`; });
+  h+=`<tr class="hl"><td><b>Razem</b></td><td>${fmtZl(S1)}</td><td class="${S1<S0?'neg':'pos'}">${Math.round((S1/S0-1)*100)}%</td><td>${fmtInt(N1)} <span class="muted">(${fmtInt(N0)})</span></td><td>${fmtZl(N1*0+C.reduce((a,c)=>a+simN(c,SIM[c.camp])*c.ltv,0))}</td><td>${fmtZl(P1)} <span class="muted">(${fmtZl(P0)})</span></td></tr>`;
+  $('#sim-table').innerHTML=h+'</tbody>';
+  const d=(a,b,f)=>`<span class="d ${b-a<0?'neg':'pos'}">${b-a>0?'+':''}${f(b-a)} vs obecnie</span>`;
+  $('#sim-sum').innerHTML=`<div><span class="k">Budżet / mies.</span><span class="v">${fmtZl(S1)}</span>${d(S0,S1,fmtZl)}</div>
+    <div><span class="k">Nowi pacjenci z płatnych / mies.</span><span class="v">${fmtInt(N1)}</span>${d(N0,N1,fmtInt)}</div>
+    <div><span class="k">Zysk po mediach z kohorty miesiąca</span><span class="v">${fmtZl(P1)}</span>${d(P0,P1,fmtZl)}</div>
+    <div><span class="k">Zysk w skali roku</span><span class="v">${fmtZl(P1*12)}</span>${d(P0*12,P1*12,fmtZl)}</div>`;
+  $$('#sim-table input.bud').forEach(inp=>inp.addEventListener('change',()=>{ const k=inp.id.slice(4); SIM[k]=Math.max(0,+inp.value||0); $$('[data-sim]').forEach(b=>b.classList.remove('primary')); renderSim(); }));
+}
 /* ---------- ZAKŁADKA: WERDYKT ---------- */
 function renderVerdict(){
   const b=T.bridge, r1=b.raw.P1, r2=b.raw.P2, c1=b.clean.P1, c2=b.clean.P2;

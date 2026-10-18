@@ -179,3 +179,21 @@ ul.clean{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;m
 .loading{padding:40px 0;color:var(--ink-3);font-family:var(--f-mono)}
 .note{font-size:12.5px;color:var(--ink-3)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* rekomendacja budżetu */
+.pill{display:inline-block;font:600 11.5px var(--f-mono);padding:2px 9px;border-radius:999px;white-space:nowrap}
+.pill.up{background:var(--good-soft);color:var(--good)}
+.pill.keep{background:var(--surface-2);color:var(--ink-2)}
+.pill.cut{background:var(--bad-soft);color:var(--bad)}
+.pill.test{background:var(--accent-soft);color:var(--accent)}
+#inv-table td{vertical-align:top}
+#inv-table td:first-child{min-width:230px;max-width:290px;white-space:normal}
+#inv-table th,#inv-table td{padding:7px 7px}
+#inv-table th{white-space:normal;min-width:64px}
+#inv-table .why{font-size:12.5px;color:var(--ink-2);margin-top:3px;line-height:1.45}
+.sim-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px}
+.sim-sum div{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.sim-sum .k{font:600 10.5px var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+.sim-sum .v{font:600 22px var(--f-display);font-variant-numeric:tabular-nums}
+.sim-sum .d{font:12px var(--f-mono)}
+input.bud{width:96px;font:13px var(--f-mono);text-align:right;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:4px 6px}

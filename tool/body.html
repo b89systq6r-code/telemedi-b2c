@@ -177,8 +177,21 @@
 <section class="tab" id="tab-kanaly" hidden>
   <div style="display:flex;flex-direction:column;gap:8px">
     <span class="eyebrow">// ekonomia pozyskania</span>
-    <h1>Który kanał zwraca CAC</h1>
-    <p class="lede">CAC kanałów płatnych za klik = wydatki / nowi pacjenci przypisani do kanału. Afiliacja: 25 zł za pierwsze zamówienie. Źródło pacjenta to ostatnie niebezpośrednie wejście w 30 dniach przed pierwszym zakupem.</p>
+    <h1>Gdzie inwestować, żeby zarabiać najwięcej</h1>
+    <p class="lede">Dla każdej kampanii: ile kosztuje pacjent, ile na nim zarabiamy w roku i ile kosztuje kolejny pacjent, gdy dołożymy budżet. Na tej podstawie rekomendacja i symulator podziału budżetu.</p>
+  </div>
+  <div class="panel" id="inv">
+    <div class="panel-head"><h2>Rekomendacja budżetu kampanii płatnych</h2><span class="note">budżet miesięczny · stan VII–IX 2026</span></div>
+    <p class="lede" style="font-size:15.5px">Najwięcej zysku da nie dokładanie budżetu, tylko zabranie ok. 29 tys. zł miesięcznie z kampanii, które tracą na każdym pacjencie: TikTok i Meta L4, Google „specjaliści” i przegrzana Google „e-recepta”. Część tych pieniędzy warto przesunąć na Google i Meta „lekarz online”, gdzie kolejny pacjent wciąż kosztuje mniej, niż zarabiamy na nim w roku. Według modelu: budżet niższy o połowę, ok. 580 nowych pacjentów z płatnych mniej, a zysk po mediach wyższy o ok. 116 tys. zł rocznie.</p>
+    <div class="scroll"><table class="t" id="inv-table"></table></div>
+    <p class="note">„Koszt kolejnego pacjenta” to koszt pacjenta pozyskanego za ostatnią dodaną złotówkę (CAC / elastyczność). Elastyczność to o ile procent rośnie liczba nowych pacjentów, gdy budżet rośnie o 1%, liczona z danych tygodniowych za 2 lata. Marża 12 mies. = przychód netto − koszt lekarza + GO, z kohort, które mają pełny rok obserwacji.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h3>Symulator: co się stanie z zyskiem przy innym podziale budżetu</h3>
+      <div class="presets"><button class="btn" type="button" data-sim="now">Obecny</button><button class="btn primary" type="button" data-sim="rec">Rekomendacja</button><button class="btn" type="button" data-sim="opt">Optimum modelu</button></div></div>
+    <div class="sim-sum" id="sim-sum"></div>
+    <div class="scroll"><table class="t" id="sim-table"></table></div>
+    <p class="note">Model: nowi pacjenci = obecni × (budżet / obecny budżet)<sup>elastyczność</sup>. Zysk = nowi pacjenci × marża 12 mies. − budżet, dla jednej miesięcznej kohorty. Model nie wie, ile pacjentów brandu i retargetingu przyszłoby i tak (dlatego ich nie skaluję), ani ile kosztują poranne kolejki z kampanii L4 (to dodatkowy zysk z ich wyłączenia). „Optimum modelu” dopuszcza do +100% budżetu, dalej to zgadywanie.</p>
   </div>
   <div class="panel">
     <div class="panel-head"><h3>Kanały w wybranym okresie pozyskania</h3>
@@ -210,10 +223,10 @@
     </div></article>
 
     <article class="pitem"><div class="rank">2</div><div class="body">
-      <h2>Przebudować kampanie L4: wyłączyć TikTok, Meta „L4 szybko” bez kodu i poza porannym szczytem</h2>
+      <h2>Przebudować budżet mediów: wyłączyć TikTok, Meta „L4” do testu, przyciąć Google „specjaliści” i „e-recepta”</h2>
       <p class="why">Kampanie L4 to dziś ≈ 29 tys. zł/mies. i ≈ 665 nowych pacjentów/mies. Retencja 90 dni 3–5%, ok. 14% zwrotów pierwszej wizyty. Marża w czasie życia ≈ 32–37 zł przy CAC z ostatnich 3 miesięcy 43–46 zł, więc każdy pozyskany pacjent jest stratny. Kody L4SZYBKO20 i TIKTOK25 obniżają cenę wizyty o 20–25 zł u ludzi, którzy przychodzą po jedno zwolnienie.</p>
       <div class="facts">
-        <div><span class="k">Ile jest warte</span>≈ 5 tys. zł/mies. bezpośrednio (różnica CAC − marża) + odblokowanie porannych slotów dla pacjentów, którzy wracają (pkt 3). Uwolniony budżet ≈ 29 tys. zł/mies. do testu w innych kanałach.</div>
+        <div><span class="k">Ile jest warte</span>Samo wyłączenie L4: ≈ 6 tys. zł zysku/mies. + odblokowanie porannych slotów (pkt 3). Razem z przycięciem Google „specjaliści” i „e-recepta” oraz skalowaniem „lekarz online”: ≈ +116 tys. zł zysku rocznie przy budżecie niższym o ≈ 29 tys. zł/mies. (symulator w zakładce Kanały).</div>
         <div><span class="k">Po czym poznamy</span>Test z wyłączeniem na 4 tygodnie: nowi pacjenci z brandu, SEO i direct nie spadają (inkrementalność), opóźnienie rano &lt; 10 min, tygodniowa marża po mediach rośnie.</div>
         <div><span class="k">Ile zajmie</span>Decyzja i zmiana w kampaniach: 1 dzień. Odczyt testu: 4–6 tygodni.</div>
       </div>
