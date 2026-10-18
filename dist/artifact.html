@@ -217,7 +217,8 @@ ul.clean{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;m
       <li><b>Ci pacjenci nie wracają.</b> Retencja 90 dni to 3–5% wobec ok. 23% w pozostałych kanałach. 72–77% kupiło z kodem rabatowym. W ok. 14% pierwsza wizyta kończy się zwrotem (przy samym L4 15–17%), bo lekarz nie wystawił zwolnienia. Marża z pacjenta w czasie życia (ok. 32–37 zł) nie pokrywa CAC (w ostatnich 3 mies. 43–46 zł).</li>
       <li><b>Wypierają pacjentów, którzy wracają.</b> Zajmują co trzecią poranną wizytę u internisty. Opóźnienie startu wizyty rano wzrosło z 5 do 23 minut. Pacjent, który na pierwszą wizytę czekał 20+ minut, wraca 2,5× rzadziej (11,5% vs 28,4%). Wizyty z takim opóźnieniem dostają średnio 3,1 zamiast 4,45.</li>
       <li><b>Od 17 III 2026 na iOS Safari psuje się logowanie.</b> Krok konta spadł z 75% do 60% i trwa to do dziś. To ok. 115 opłaconych zamówień miesięcznie.</li>
-      <li><b>Dwie liczby z dashboardu są zawyżone.</b> Zamówienia: duplikaty eksportu i 2 102 zamówienia testowe QA. Przychód: kwota brutto, przed zwrotami.</li>
+      <li><b>Dwie liczby z dashboardu są zawyżone, trzecia myli.</b> Zamówienia: duplikaty eksportu i 2 102 zamówienia testowe QA. Przychód: kwota brutto, przed zwrotami.</li>
+      <li><b>„+40% TelemediGO” to niekoniecznie dobra wiadomość.</b> Członek GO dostaje w ciągu roku średnio 111 zł rabatu, a płaci 89 zł. GO zarabia tylko wtedy, gdy przyprowadza dodatkowe wizyty, a tego z tych danych nie da się udowodnić.</li>
       <li><b>Marża po lekarzu, GO i mediach rośnie o +27%</b>, a wydatki na kampanie o +77%. Biznes rośnie, ale coraz drożej.</li>
     </ol>
   </div>
@@ -431,9 +432,9 @@ ul.clean{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;m
 
     <article class="pitem"><div class="rank">5</div><div class="body">
       <h2>Odnowienia TelemediGO: przypomnienie i odnowienie jednym kliknięciem</h2>
-      <p class="why">GO nie odnawia się samo. Z 1 524 wygasłych członkostw odnowiono 83 (5,4%). U pacjentów, którzy nie odnowili, liczba zamówień w 90 dni po wygaśnięciu spada o 78% (0,172 → 0,037). Co miesiąc wygasa ok. 200 członkostw (X 2026: 176, I 2027: 242).</p>
+      <p class="why">Najpierw zastrzeżenie: członkowie GO z pełnym rokiem członkostwa dostali średnio 111 zł rabatu przy opłacie 89 zł (łącznie 195 tys. zł rabatu vs 156 tys. zł opłat). GO opłaca się tylko, jeśli zatrzymuje pacjenta. Dlatego to test A/B, a nie wdrożenie dla wszystkich. GO nie odnawia się samo. Z 1 524 wygasłych członkostw odnowiono 83 (5,4%). U pacjentów, którzy nie odnowili, liczba zamówień w 90 dni po wygaśnięciu spada o 78% (0,172 → 0,037). Co miesiąc wygasa ok. 200 członkostw (X 2026: 176, I 2027: 242).</p>
       <div class="facts">
-        <div><span class="k">Ile jest warte</span>Odnowienia z 5% do 20–25%: +30–40 odnowień/mies. × 89 zł ≈ 3 tys. zł/mies. + utrzymanie aktywności najbardziej lojalnych pacjentów.</div>
+        <div><span class="k">Ile jest warte</span>Warunkowo. Odnowienia z 5% do 20–25%: +30–40 odnowień/mies. Opłaty to ≈ 3 tys. zł/mies., ale część oddajemy w rabacie. Realna wartość to utrzymani pacjenci: po wygaśnięciu zamawiają o 78% mniej.</div>
         <div><span class="k">Po czym poznamy</span>A/B na kohortach wygaśnięć (przypomnienie 30/7/1 dzień przed vs brak). Odsetek odnowień i zamówienia w 90 dni po dacie wygaśnięcia.</div>
         <div><span class="k">Ile zajmie</span>1–2 tygodnie. Kanały CRM (e-mail, SMS) już działają.</div>
       </div>
@@ -462,6 +463,7 @@ ul.clean{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;m
     <div class="q"><div><div class="k">Nie wiemy</div>Czy pacjenci z kampanii L4 przyszliby i tak (z brandu, SEO, bezpośrednio)? Wtedy prawdziwy CAC jest wyższy, niż liczę. Albo odwrotnie: brand i direct też urosły w I–III 2026. Może to być efekt halo kampanii, ale też sezon infekcji.</div><div><div class="k">Co rozstrzygnie</div>Wyłączenie kampanii na 4 tygodnie w połowie województw (geo-holdout) i porównanie nowych pacjentów ze wszystkich kanałów.</div></div>
     <div class="q"><div><div class="k">Nie wiemy</div>Czy poranne opóźnienia to tylko popyt z kampanii, czy także spadek podaży lekarzy (grafiki, odejścia)? W danych nie ma dostępności lekarzy.</div><div><div class="k">Co rozstrzygnie</div>Grafik dyżurów internistów per godzina od X 2024 i liczba aktywnych lekarzy. Zestawię je z wolumenem wizyt.</div></div>
     <div class="q"><div><div class="k">Nie wiemy</div>Co dokładnie zmieniło się 17 III 2026 na iOS Safari i czy część pacjentów dokończyła zakup na innym urządzeniu. Brak powiązań między urządzeniami bez logowania.</div><div><div class="k">Co rozstrzygnie</div>Release log strony i aplikacji z marca 2026, logi błędów frontu, nagrania sesji iOS Safari na kroku konta.</div></div>
+    <div class="q"><div><div class="k">Nie wiemy</div>Czy TelemediGO w ogóle zarabia. Członek z pełnym rokiem dostaje średnio 111 zł rabatu przy opłacie 89 zł, więc GO jest na plusie tylko, jeśli generuje dodatkowe wizyty. Członkowie GO wracają częściej (36% vs 23%), ale to mogą być po prostu osoby, które i tak dużo się leczą.</div><div><div class="k">Co rozstrzygnie</div>Test ceny lub rabatu GO (np. 20% zamiast 50% u internisty) na losowej części ruchu i porównanie marży na pacjenta po 6 miesiącach.</div></div>
     <div class="q"><div><div class="k">Nie wiemy</div>Czy samodzielny zakup GO (od 7 IX 2025) zwiększa liczbę wizyt, czy tylko daje rabat lojalnym pacjentom, którzy i tak by kupili. Kupują je osoby ze średnio 3,6 wcześniejszymi zamówieniami.</div><div><div class="k">Co rozstrzygnie</div>Grupa kontrolna 10–20% w kampanii <code>crm_go_upsell</code> bez oferty, porównanie marży po 6 miesiącach.</div></div>
     <div class="q"><div><div class="k">Nie wiemy</div>Czy spadek aktywności po wygaśnięciu GO to skutek braku odnowienia, czy GO kupują ludzie w trakcie leczenia, które się kończy.</div><div><div class="k">Co rozstrzygnie</div>A/B przypomnienia o odnowieniu (pkt 5 priorytetów).</div></div>
     <div class="q"><div><div class="k">Nie wiemy</div>Jak naprawdę rozkłada się atrybucja. Przyjąłem ostatnie niebezpośrednie wejście w 30 dniach. Retargeting koszyka jest zawsze ostatnim dotknięciem, więc może przejmować zasługi prospectingu.</div><div><div class="k">Co rozstrzygnie</div>Test wyłączenia retargetingu lub porównanie z modelem first-touch. Narzędzie łatwo przeliczyć na inny model.</div></div>
@@ -485,6 +487,7 @@ ul.clean{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;m
         <li><b>Duplikaty zamówień.</b> 604 order_id występują dwukrotnie, wszystkie między 10 a 24 VI 2026, z identyczną treścią. W tych dniach liczba zamówień jest zawyżona o ok. 35%. Deduplikuję po order_id.</li>
         <li><b>Konta testowe QA.</b> Kod <code>TEST-QA</code>: 1 810 zamówień za 1,00 zł, internista, 1 minuta, desktop Chrome, wejście bezpośrednie, godz. 9–17, 22 konta z Warszawy bez zgody marketingowej. Te same konta mają jeszcze 292 zamówienia za 89 zł o tym samym profilu. Wykluczam całe konta (2 102 zamówienia, ok. 2 100 sesji). Testów przybywa: od 4/mies. do 100–160/mies.</li>
         <li><b>Przychód na dashboardzie to brutto.</b> Zwroty (anulowane i refunded) to 6–8% kwoty i rosną.</li>
+        <li><b>„Pacjenci z pierwszym zakupem” liczą też zakupy cofnięte.</b> Pierwsze zamówienie anulowane lub zwrócone ma 9,7% nowych pacjentów w ostatnim roku (6,3% rok wcześniej). Zostawiam ich jako pacjentów, bo zapłacili i weszli w relację, ale ten udział rośnie przez kampanie L4.</li>
         <li><b>Wrzesień 2025: więcej startów płatności niż logowań.</b> To nie błąd: od 7 IX 2025 można kupić samo GO (dwa ostatnie kroki lejka). Wyłączam takie sesje z lejka konsultacji.</li>
       </ul>
     </div>
@@ -921,7 +924,7 @@ function renderVerdict(){
     ['…bez kampanii L4 (Meta + TikTok)', null, g(c1.pac_core,c2.pac_core), `Kampanie L4 dały ${fmtInt(c2.pac-c2.pac_core)} z ${fmtInt(c2.pac-c1.pac)} przyrostu nowych pacjentów.`],
     ['Zamówienia', g(r1.zam,r2.zam), g(c1.zam,c2.zam), '604 zdublowane wiersze (10–24 VI 2026) i 2 102 zamówienia testowe QA.'],
     ['Przychód z konsultacji', g(r1.przych,r2.przych), g(c1.netto,c2.netto), 'Dashboard liczy kwotę brutto. Zwroty rosną szybciej niż sprzedaż.'],
-    ['Sprzedane TelemediGO', g(r1.go,r2.go), g(r1.go,r2.go), 'Zgodne. Część to zakupy samego GO od IX 2025.'],
+    ['Sprzedane TelemediGO', g(r1.go,r2.go), g(r1.go,r2.go), 'Liczba się zgadza, ale członek GO dostaje średnio 111 zł rabatu przy opłacie 89 zł. Więcej GO nie znaczy więcej marży.'],
     ['Marża po lekarzu (bez mediów)', null, g(c1.cm,c2.cm), 'Netto − koszt lekarza.'],
     ['Wydatki na kampanie płatne', null, g(c1.spend,c2.spend), ''],
     ['Marża po lekarzu, GO i mediach', null, g(cm2(c1),cm2(c2)), `${fmtZl(cm2(c1)/1000)} tys. → ${fmtZl(cm2(c2)/1000)} tys.`],

@@ -392,7 +392,7 @@ function renderVerdict(){
     ['…bez kampanii L4 (Meta + TikTok)', null, g(c1.pac_core,c2.pac_core), `Kampanie L4 dały ${fmtInt(c2.pac-c2.pac_core)} z ${fmtInt(c2.pac-c1.pac)} przyrostu nowych pacjentów.`],
     ['Zamówienia', g(r1.zam,r2.zam), g(c1.zam,c2.zam), '604 zdublowane wiersze (10–24 VI 2026) i 2 102 zamówienia testowe QA.'],
     ['Przychód z konsultacji', g(r1.przych,r2.przych), g(c1.netto,c2.netto), 'Dashboard liczy kwotę brutto. Zwroty rosną szybciej niż sprzedaż.'],
-    ['Sprzedane TelemediGO', g(r1.go,r2.go), g(r1.go,r2.go), 'Zgodne. Część to zakupy samego GO od IX 2025.'],
+    ['Sprzedane TelemediGO', g(r1.go,r2.go), g(r1.go,r2.go), 'Liczba się zgadza, ale członek GO dostaje średnio 111 zł rabatu przy opłacie 89 zł. Więcej GO nie znaczy więcej marży.'],
     ['Marża po lekarzu (bez mediów)', null, g(c1.cm,c2.cm), 'Netto − koszt lekarza.'],
     ['Wydatki na kampanie płatne', null, g(c1.spend,c2.spend), ''],
     ['Marża po lekarzu, GO i mediach', null, g(cm2(c1),cm2(c2)), `${fmtZl(cm2(c1)/1000)} tys. → ${fmtZl(cm2(c2)/1000)} tys.`],
