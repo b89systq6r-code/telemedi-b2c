@@ -5,7 +5,10 @@ head = '<title>Telemedi B2C Kohorty</title>\n<meta name="claude:viewport-fit-sid
        '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' \
        '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">\n'
 css = '<style>\n' + (t/'app.css').read_text() + '\n</style>\n'
+import base64
 body = (t/'body.html').read_text()
+for k,f in [('{{SABRES_S}}','sabres64.png'),('{{SABRES_L}}','sabres160.png')]:
+    body = body.replace(k, 'data:image/png;base64,' + base64.b64encode((t/'assets'/f).read_bytes()).decode())
 scripts = '<script>' + (t/'data.js').read_text() + '</script>\n<script>' + (t/'app.js').read_text() + '</script>\n'
 frag = head + css + body + scripts
 pathlib.Path('dist').mkdir(exist_ok=True)

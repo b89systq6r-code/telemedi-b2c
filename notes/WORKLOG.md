@@ -88,3 +88,13 @@ Uwaga metodologiczna: okres P1 startuje od zera (sprzedaż od 1 X 2024), więc P
 - Kanały: CAC, marża 90/180/365 dni, marża − CAC.
 - Pierwszy render: (1) tabela ocen posortowała się alfabetycznie („10–20” przed „< 10”), poprawione na kolejność logiczną. (2) Tygodniowe szeregi lejka dla małych segmentów (macOS, iOS inne) za bardzo szumiały, podniosłem próg do 40 sesji na tydzień. (3) W werdykcie było +26%, a tabela pokazuje +27% (26,5% zaokrąglone), ujednolicone. (4) Na telefonie skrócony nagłówek.
 - Nowa obserwacja z wykresu kanałów: brand + direct też rosną w I–III 2026, razem z kampaniami L4. Może to być halo kampanii albo sezon infekcji. Dopisane do „nierozstrzygalnych”.
+
+## Krok 11: przegląd błędów i podpis autora (prośba Sebastiana: „sprawdź błędy, dodaj mój sznyt”)
+Weryfikacja wszystkich liczb z tekstów narzędzia względem danych. Poprawione:
+- „16% pierwszych wizyt ze zwrotem” w kampaniach L4 to za dużo: dla wszystkich pierwszych wizyt jest 14,2% (Meta 14,7%, TikTok 13,1%). 15–17% dotyczy tylko pierwszych wizyt L4. Teksty rozdzielone.
+- „90. percentyl > 30 min” rano: to była wartość dla całego dnia. Rano od II 2026 p90 = 56 min. Poprawione na „co dziesiąta wizyta zaczyna się ponad 55 min po terminie”.
+- Ocena 3,1 vs 4,45 dotyczy wszystkich ocenionych wizyt, nie tylko pierwszych. Zmienione sformułowanie.
+- Zwroty jako % kwoty: 6,1% (P1) i 8,0% (P2), tekst „6–8%” zgadza się.
+- Błąd wizualny: tygodnie z 1–3 pacjentami rysowały skoki do 0% lub 15% (np. pierwsze tygodnie kampanii L4). Wprowadziłem minimalną liczebność punktu: 20 pacjentów (tydzień/miesiąc), 5 (dzień), 20 w oknie 7-dniowym. Przy okazji wyłapałem, że ten próg zerował wykres „nowi pacjenci dziennie”, więc rolling dostał osobny parametr.
+- Usunięta półpauza (—) z komentarza w kodzie (preferencja: bez em-dashy).
+Podpis: szable z logo Fabest (bez napisu, na prośbę), z usuniętym białym tłem, żeby działały w ciemnym motywie. W nagłówku „// by S. Szablewski”, w stopce kontakt i stack. Etykiety w stylu CV (`// komentarz`, `[ lista ]`).

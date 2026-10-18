@@ -1,4 +1,4 @@
-/* Telemedi B2C — kokpit kohort i lejków. Vanilla JS, wszystko liczone w przeglądarce z danych pacjent/sesja. */
+/* Telemedi B2C · kokpit kohort i lejków. Vanilla JS. Wszystko liczone w przeglądarce z danych pacjent/sesja.    Autor: Sebastian Szablewski (fabest.pl), zbudowane z Claude Code. */
 (async function(){
 'use strict';
 const T = window.TM_DATA, DIM = T.dims, LAST = T.ndays - 1; // dzień 729 = 2026-09-30
@@ -164,7 +164,7 @@ function lineChart(host, o){
 function niceStep(x){ const p=Math.pow(10,Math.floor(Math.log10(x))), f=x/p; return (f<1.5?1:f<3?2:f<7?5:10)*p; }
 function legend(host, series){ host.innerHTML=series.map(s=>`<span><i class="swatch" style="background:${s.color}"></i>${s.name}</span>`).join(''); }
 function evlist(host){ host.innerHTML=EVENTS.map((e,k)=>`<span><b>${k+1}</b>${dayStr(e.d)}: ${e.t}</span>`).join(''); }
-function rolling(num,den,w){ const n=num.length, ys=new Array(n).fill(null); let a=0,b=0; for(let j=0;j<n;j++){ a+=num[j]; b+=den[j]; if(j>=w){ a-=num[j-w]; b-=den[j-w]; } if(j>=w-1 && b>0) ys[j]=a/b; } return ys; }
+function rolling(num,den,w,minDen=20){ const n=num.length, ys=new Array(n).fill(null); let a=0,b=0; for(let j=0;j<n;j++){ a+=num[j]; b+=den[j]; if(j>=w){ a-=num[j-w]; b-=den[j-w]; } if(j>=w-1 && b>=minDen) ys[j]=a/b; } return ys; }
 const redraws=[]; let rT; new ResizeObserver(()=>{ clearTimeout(rT); rT=setTimeout(()=>redraws.forEach(f=>f()),120); }).observe(document.body);
 const themeObs=new MutationObserver(()=>redraws.forEach(f=>f())); themeObs.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>redraws.forEach(f=>f()));
@@ -188,9 +188,9 @@ function cohortSeries({filter, split, gran, metric, N, withGo, smooth}){
     let tot=0; for(let b=0;b<nb;b++) tot+=den[g][b]; if(!tot) continue;
     const ok=b=> !needsN || bucketEnd(b,gran)+N<=LAST;
     let ys, ns=[...den[g]];
-    if(metric==='n'){ ys=[...den[g]]; if(gran==='day'&&smooth){ const one=new Array(nb).fill(1); ys=rolling(den[g],one,7); } }
+    if(metric==='n'){ ys=[...den[g]]; if(gran==='day'&&smooth){ const one=new Array(nb).fill(1); ys=rolling(den[g],one,7,1); } }
     else if(gran==='day'&&smooth){ const nn=num[g].map((v,b)=>ok(b)?v:0), dd=den[g].map((v,b)=>ok(b)?v:0); ys=rolling(nn,dd,7).map((v,b)=>ok(b)?v:null); }
-    else ys=[...Array(nb)].map((_,b)=> ok(b)&&den[g][b]>0 ? num[g][b]/den[g][b] : null);
+    else { const minN = gran==='day'?5:20; ys=[...Array(nb)].map((_,b)=> ok(b)&&den[g][b]>=minN ? num[g][b]/den[g][b] : null); }
     series.push({g, name:dim?dim.vals[g]:'Wszyscy pacjenci (filtr)', ys, ns, tot});
   }
   series.sort((a,b)=>b.tot-a.tot);
