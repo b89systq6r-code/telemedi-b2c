@@ -5,6 +5,17 @@ Autor: Sebastian Szablewski. Praca z AI: Claude (Claude Code).
 - **Narzędzie:** `index.html` (kopia `dist/index.html`), jedna strona bez instalacji. Działa offline i na GitHub Pages.
 - **Ślad pracy:** `notes/WORKLOG.md` (chronologicznie, łącznie ze ślepymi uliczkami) + historia commitów.
 
+## Co jest w narzędziu
+| Zakładka | Na jakie pytanie odpowiada |
+|---|---|
+| Czy to wzrost? | Werdykt: dashboard vs dane po czyszczeniu, retencja, poranny szczyt, zdarzenia znalezione w danych |
+| Kohorty | Gdzie tracimy, gdzie zyskujemy (zł/mies., rok do roku, mostek miks/wynik) + kohorty dzienne/tygodniowe/miesięczne z filtrami |
+| Lejki | Gdzie i od kiedy tracimy pacjentów: okres A vs B, konwersja kroków w segmentach, szereg czasowy kroku |
+| Kanały i CAC | W co inwestować: opłacalność kampanii, koszt kolejnego pacjenta, rekomendacja i symulator budżetu |
+| Priorytety | Co robić po kolei: wartość, sposób pomiaru, czas wdrożenia |
+| Czego nie rozstrzygniemy | Czego dane nie mówią i jaki test to domknie |
+| Dane i metoda | Problemy w danych i założenia |
+
 ## Struktura
 | Plik | Co robi |
 |---|---|
